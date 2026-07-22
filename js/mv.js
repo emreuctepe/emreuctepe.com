@@ -41,7 +41,7 @@ function _animateStripes(container, options={}) {
     if (options.color) {
       color = options.color;
     } else {
-      color = tinycolor(`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`).toRgbString();
+      color = window.randomVividColor();
     }
     let baseWidth = Math.max(windowWidth, 1000);
     let width = Math.round(baseWidth / 10 + Math.random() * baseWidth / 10) * options.sizeRatio;
@@ -195,7 +195,7 @@ function cloneAndStripeElement(element, clipPathName, parent) {
     height: box.height,
   };
   let style = window.getComputedStyle(element);
-  let borderColor = tinycolor(`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`).toRgbString();
+  let borderColor = window.randomVividColor();
 
   dynamics.css(el, {
     position: 'absolute',
@@ -234,8 +234,7 @@ let originalContentEls = document.querySelectorAll('#header-content, #content');
       contentEls.push(clonedEl)
       let childrenEls = clonedEl.querySelectorAll('h2, ul > li > a, a.more, h1, p, path');
       for (let k = 0; k < childrenEls.length; k++) {
-        let color = tinycolor(`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`);
-        let rgb = color.toRgbString();
+        let rgb = window.randomVividColor();
         dynamics.css(childrenEls[k], {
           color: rgb,
           fill: rgb,
@@ -294,8 +293,24 @@ function showContent() {
   }, maxDelay);
 }
 
+let prefersReducedMotion = window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // intro
 (function() {
+  // Hareket hassasiyeti olan kullanicilar icin: agir serit/logo animasyonunu
+  // tamamen atla, icerigi dogrudan goster ve intro katmanini kaldir.
+  if (prefersReducedMotion) {
+    for (let i = 0; i < originalContentEls.length; i++) {
+      originalContentEls[i].style.visibility = 'visible';
+    }
+    contentEls.forEach(function(el) {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    });
+    if (introEl && introEl.parentNode) introEl.parentNode.removeChild(introEl);
+    return;
+  }
+
   animateBlackStripes(stripesEl, {
     count: 200,
   });
@@ -426,8 +441,7 @@ function showContent() {
         let childrenEls = Array.prototype.slice.apply(clonedEl.querySelectorAll('path'));
         childrenEls.push(clonedEl);
         for (let k = 0; k < childrenEls.length; k++) {
-          let color = tinycolor(`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`);
-          let rgb = color.toRgbString();
+          let rgb = window.randomVividColor();
           dynamics.css(childrenEls[k], {
             color: rgb,
             fill: rgb,
@@ -495,7 +509,7 @@ function showContent() {
   function demoAllLinksOnce() {
     Array.prototype.slice.call(linkEls).forEach(function(el, i) {
       setTimeout(function() {
-        let color = tinycolor(`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`).toRgbString();
+        let color = window.randomVividColor();
         let paths = el.querySelectorAll('svg path');
         let prevColor = el.style.color;
         let prevFills = Array.prototype.map.call(paths, function(p) { return p.style.fill; });
@@ -510,13 +524,16 @@ function showContent() {
       }, i * 90);
     });
   }
-  setTimeout(demoAllLinksOnce, 2800);
+  // Hareket azaltma tercihinde otomatik "tanitim" turunu ve 15sn'lik tekrari atla.
+  if (!prefersReducedMotion) {
+    setTimeout(demoAllLinksOnce, 2800);
 
-  // her 15 saniyede bir, o sirada gercek bir hover animasyonu oynamiyorsa
-  // tanitim turunu tekrarla
-  setInterval(function() {
-    if (!isHoverAnimating) {
-      demoAllLinksOnce();
-    }
-  }, 15000);
+    // her 15 saniyede bir, o sirada gercek bir hover animasyonu oynamiyorsa
+    // tanitim turunu tekrarla
+    setInterval(function() {
+      if (!isHoverAnimating) {
+        demoAllLinksOnce();
+      }
+    }, 15000);
+  }
 })();

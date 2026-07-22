@@ -6,8 +6,7 @@
 // linki bu renge dahil etmek icin ekstra bir sey yapmaya gerek yok, sadece <a>
 // etiketine sarmak yeterli.
 (function() {
-  let hue = Math.floor(Math.random() * 360);
-  let color = tinycolor(`hsl(${hue}, 80%, 65%)`).toRgbString();
+  let color = window.randomVividColor();
   document.documentElement.style.setProperty('--inline-link-color', color);
 
   // Favicon: ayni renkle bir daire ciziyoruz, SVG'yi data URI olarak favicon
