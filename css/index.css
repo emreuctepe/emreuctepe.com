@@ -130,6 +130,25 @@ header {
   fill: #adb0b6;
 }
 
+#lang-switcher {
+  padding-top: 22px;
+  font-size: 14px;
+  color: #7A7C80;
+}
+
+#lang-switcher a {
+  color: #7A7C80;
+  text-decoration: none;
+}
+
+#lang-switcher a:hover {
+  color: #adb0b6;
+}
+
+#lang-switcher a.active {
+  color: white;
+}
+
 #content {
   display: flex;
   flex-direction: column;

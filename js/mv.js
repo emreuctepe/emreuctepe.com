@@ -391,6 +391,7 @@ function showContent() {
 // page
 (function() {
   let linkEls = document.querySelectorAll('a');
+  let isHoverAnimating = false;
 
   function handleMouseOver(e) {
     let el = e.target;
@@ -401,10 +402,12 @@ function showContent() {
       return;
     }
     let r = animateLink(el);
+    isHoverAnimating = true;
 
     let handleMouseOut = function(e) {
       el.removeEventListener('mouseout', handleMouseOut);
       r.stop();
+      isHoverAnimating = false;
     }
 
     el.addEventListener('mouseout', handleMouseOut);
@@ -482,4 +485,38 @@ function showContent() {
       linkEls[i].addEventListener('mouseover', handleMouseOver);
     }
   }
+
+  // sayfa acilinca tum linkleri sirayla, hizlica ve tek seferlik "tanit".
+  // onceki denemeler animateLink'in klon sistemini kullanip konum/temizlik
+  // hatasina yol acmisti - bu sefer klon yok, sadece linkin kendi rengini
+  // (ve varsa svg path fill'ini) kisaca degistirip geri alıyoruz. Native
+  // setTimeout kullaniliyor, dynamics.setTimeout'un gorunurluk bagimliligindan
+  // etkilenmesin diye.
+  function demoAllLinksOnce() {
+    Array.prototype.slice.call(linkEls).forEach(function(el, i) {
+      setTimeout(function() {
+        let color = tinycolor(`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`).toRgbString();
+        let paths = el.querySelectorAll('svg path');
+        let prevColor = el.style.color;
+        let prevFills = Array.prototype.map.call(paths, function(p) { return p.style.fill; });
+
+        el.style.color = color;
+        paths.forEach(function(p) { p.style.fill = color; });
+
+        setTimeout(function() {
+          el.style.color = prevColor;
+          paths.forEach(function(p, k) { p.style.fill = prevFills[k]; });
+        }, 200);
+      }, i * 90);
+    });
+  }
+  setTimeout(demoAllLinksOnce, 2800);
+
+  // her 15 saniyede bir, o sirada gercek bir hover animasyonu oynamiyorsa
+  // tanitim turunu tekrarla
+  setInterval(function() {
+    if (!isHoverAnimating) {
+      demoAllLinksOnce();
+    }
+  }, 15000);
 })();

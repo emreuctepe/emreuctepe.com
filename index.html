@@ -16,7 +16,7 @@
           <div id="profile-glitch-canvas"></div>
         </div>
         <h1>Emre Üçtepe</h1>
-        <p>Türkiye</p>
+        <p data-i18n="country">Türkiye</p>
         <div id="contact">
           <a href="mailto:muhammedemreuctepe@gmail.com" id="email"><svg viewBox="0 0 42 36" xmlns="http://www.w3.org/2000/svg"><path d="M3.025 5.255A1.99 1.99 0 0 1 4.003 5h33.994c.354 0 .688.093.977.256L21 18.5 3.025 5.255zm-1.002 1.45c-.015.098-.023.2-.023.302V18.28v-5.636 17.35C2 31.1 2.902 32 4.003 32h33.994A2.005 2.005 0 0 0 40 29.993v-17.35 5.638V7.008c0-.103-.008-.204-.023-.303L21 20.687 2.023 6.704z"/></svg></a>
 
@@ -33,31 +33,34 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="47 128 546.2 384"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M581.7 188.1C575.5 164.4 556.9 145.8 533.4 139.5C490.9 128 320.1 128 320.1 128C320.1 128 149.3 128 106.7 139.5C83.2 145.8 64.7 164.4 58.4 188.1C47 231 47 320.4 47 320.4C47 320.4 47 409.8 58.4 452.7C64.7 476.3 83.2 494.2 106.7 500.5C149.3 512 320.1 512 320.1 512C320.1 512 490.9 512 533.5 500.5C557 494.2 575.5 476.3 581.8 452.7C593.2 409.8 593.2 320.4 593.2 320.4C593.2 320.4 593.2 231 581.8 188.1zM264.2 401.6L264.2 239.2L406.9 320.4L264.2 401.6z"/></svg>
           </a>
         </div>
+        <div id="lang-switcher">
+          <a href="#" data-lang="tr">TR</a> · <a href="#" data-lang="en">EN</a> · <a href="#" data-lang="ja">日本語</a>
+        </div>
       </div>
     </header>
     <div id="content">
       <section id="about">
-        <h2>Hakkımda</h2>
-        <p>Birçok hobisini gelişen teknoloji sayesinde ortak noktada birleştiren şanslı biri.</p>
-        <a href="#" class="more">İletişime Geç <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
+        <h2 data-i18n="about_title">Hakkımda</h2>
+        <p data-i18n="about_text">Birçok hobisini gelişen teknoloji sayesinde ortak noktada birleştiren şanslı biri.</p>
+        <a href="#" class="more"><span data-i18n="about_more">İletişime Geç</span> <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
       </section>
       <section id="work">
-        <h2>Projeler</h2>
+        <h2 data-i18n="work_title">Projeler</h2>
         <ul>
-          <li><a href="#">Sosyal Dergi - dergi.com</a></li>
-          <li><a href="#">Türkiye'yi tanıtmak bana mı kaldı kardeşim! - YouTube Podcast</a></li>
-          <li><a href="#">Rastgele Konu Seç - randomtopik.com</a></li>
+          <li><a href="#"><span data-i18n="project_1_desc">Sosyal Dergi</span> - dergi.com</a></li>
+          <li><a href="#"><span data-i18n="project_2_desc">Türkiye'yi tanıtmak bana mı kaldı kardeşim!</span> - YouTube Podcast</a></li>
+          <li><a href="#"><span data-i18n="project_3_desc">Rastgele Konu Seç</span> - randomtopik.com</a></li>
         </ul>
-        <a href="#" class="more">Diğer Projeler <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
+        <a href="#" class="more"><span data-i18n="work_more">Diğer Projeler</span> <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
       </section>
       <section id="articles">
-        <h2>Yazılar</h2>
+        <h2 data-i18n="articles_title">Yazılar</h2>
         <ul>
           <li><a href="#">大好きな図書館:IPA</a></li>
           <li><a href="#">Japon Modernleşmesine Farklı Bir Bakış</a></li>
           <li><a href="#">A Thrilled Love Story In The Old Train with Grapphities</a></li>
         </ul>
-        <a href="#" class="more">Diğer Yazılar <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
+        <a href="#" class="more"><span data-i18n="articles_more">Diğer Yazılar</span> <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
       </section>
     </div>
   </div>
@@ -69,6 +72,10 @@
   <script src="js/dynamics.js"></script>
   <script src="js/tinycolor.js"></script>
   <script src="js/random-link-color.js"></script>
+  <script src="lang/tr.js"></script>
+  <script src="lang/en.js"></script>
+  <script src="lang/ja.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/mv.js"></script>
   <script src="js/profile-glitch.js"></script>
 </body>
