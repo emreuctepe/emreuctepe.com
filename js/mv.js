@@ -500,14 +500,14 @@ let prefersReducedMotion = window.matchMedia &&
     }
   }
 
-  // sayfa acilinca tum linkleri sirayla, hizlica ve tek seferlik "tanit".
-  // onceki denemeler animateLink'in klon sistemini kullanip konum/temizlik
-  // hatasina yol acmisti - bu sefer klon yok, sadece linkin kendi rengini
-  // (ve varsa svg path fill'ini) kisaca degistirip geri alıyoruz. Native
-  // setTimeout kullaniliyor, dynamics.setTimeout'un gorunurluk bagimliligindan
-  // etkilenmesin diye.
+  // sayfa acilinca tum linkleri sirayla "tanit": her linkin kendi rengini
+  // (ve varsa svg path fill'ini) degistirip geri aliyoruz. Native setTimeout
+  // kullaniliyor, dynamics.setTimeout'un gorunurluk bagimliligindan etkilenmesin diye.
+  // Not: yukaridaki linkEls sayfa yuklenirken yakalandigi icin intro'nun gecici
+  // klonlarini da iceriyordu; burada cagri aninda CANLI linkler sorgulaniyor (o an
+  // klonlar temizlenmis) - boylece sadece gercek 16 link boyanir ve tur suresi dogru.
   function demoAllLinksOnce() {
-    Array.prototype.slice.call(linkEls).forEach(function(el, i) {
+    Array.prototype.slice.call(document.querySelectorAll('a')).forEach(function(el, i) {
       setTimeout(function() {
         let color = window.randomVividColor();
         let paths = el.querySelectorAll('svg path');
@@ -520,20 +520,25 @@ let prefersReducedMotion = window.matchMedia &&
         setTimeout(function() {
           el.style.color = prevColor;
           paths.forEach(function(p, k) { p.style.fill = prevFills[k]; });
-        }, 200);
-      }, i * 90);
+        }, 750);
+      }, i * 75);
     });
   }
-  // Hareket azaltma tercihinde otomatik "tanitim" turunu ve 15sn'lik tekrari atla.
+  // Hareket azaltma tercihinde otomatik "tanitim" turunu ve tekrarini atla.
   if (!prefersReducedMotion) {
-    setTimeout(demoAllLinksOnce, 2800);
+    setTimeout(function startTours() {
+      demoAllLinksOnce();
 
-    // her 15 saniyede bir, o sirada gercek bir hover animasyonu oynamiyorsa
-    // tanitim turunu tekrarla
-    setInterval(function() {
-      if (!isHoverAnimating) {
-        demoAllLinksOnce();
-      }
-    }, 15000);
+      // Turun toplam suresi link sayisina + link basina gecikmeye bagli. Sabit/kisa
+      // aralik olursa turlar ust uste biner - o yuzden tekrar araligi, ILK tur sonrasi
+      // (klonlar temizlenmisken) gercek link sayisina gore hesaplaniyor.
+      let tourMs = document.querySelectorAll('a').length * 100 + 200;
+      let pauseMs = 15000;
+      setInterval(function() {
+        if (!isHoverAnimating) {
+          demoAllLinksOnce();
+        }
+      }, tourMs + pauseMs);
+    }, 2800);
   }
 })();
