@@ -157,7 +157,7 @@
       const n = floor(random(100));
       if (n > 75 && this.throughFlag) {
         this.throughFlag = false;
-        this.throughUntil = now() + floor(random(3000, 4000));
+        this.throughUntil = now() + floor(random(15000, 20000));
       }
       if (!this.throughFlag) {
         if (now() >= this.throughUntil) {

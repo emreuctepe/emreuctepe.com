@@ -4,6 +4,12 @@
 // mv.js sayfa yuklenirken metni klonlayip glitch efektine hazirliyor, o klonlama
 // olmadan once metnin dogru dilde olmasi lazim. Ceviri sozlukleri (lang/*.js)
 // fetch degil, normal <script src> ile senkron yuklendigi icin bu mumkun.
+//
+// DIL MIMARISI: Turkce (sitenin varsayilan dili) icin ayri bir sozluk YOK -
+// Turkce metin dogrudan index.html icinde, data-i18n elemanlarinin govdesinde
+// yasar (tek kaynak). Asagidaki dongude tr icin I18N.tr tanimsiz oldugundan dict
+// bos kalir ve HTML metnine dokunulmaz. Sadece EN/JA icin lang/en.js, lang/ja.js
+// sozlukleri var. Yani Turkce metni degistirmek icin index.html'i duzenle.
 (function() {
   let supported = ['tr', 'en', 'ja'];
   let params = new URLSearchParams(window.location.search);
