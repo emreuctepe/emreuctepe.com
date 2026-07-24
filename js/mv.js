@@ -247,6 +247,18 @@ let originalContentEls = document.querySelectorAll('#header-content, #content');
     }
     el.style.visibility = 'hidden';
   }
+
+  // Intro'nun "toplanma" efektinde #header-content siyah zeminli seritli klonlarla
+  // beliriyor; klonlanan canvas bos oldugu icin profil resmi siyah bantlarla kaplaniyor.
+  // Onun yerine canli glitch gorunsun diye profil logosunu gorunur + klonlarin USTUNDE
+  // tutuyoruz (metin klonlari etkilenmez, normal toplaniyor). Profil glitch'i intro
+  // sirasinda zaten calisiyor (profile-glitch.js); sadece uste cikariyoruz.
+  let logoEl = document.querySelector('#header-logo');
+  if (logoEl) {
+    logoEl.style.visibility = 'visible';
+    logoEl.style.position = 'relative';
+    logoEl.style.zIndex = '2';
+  }
 })();
 
 function showContent() {
@@ -617,9 +629,10 @@ let prefersReducedMotion = window.matchMedia &&
     const STAGGER = 70;  // satirlar arasi gecikme (orijinalin 4x hizlisi)
     const SLIDE = 130;   // her satirin kayma suresi (orijinalin 4x hizlisi)
 
-    function expandProjects() {
+    function expandProjects(instant) {
       if (opened) return;
       opened = true;
+      window.__projectsExpanded = true; // dil degisiminde acik kalabilmesi icin (bkz. i18n.js)
 
       // Layout'u top-anchor'a gecir: SATIRLAR EKLENMEDEN ONCE, kapali yuksekligi olcup
       // #page'i mevcut (ortali) konumunda dondur. Boylece icerik sadece ASAGI buyur ve
@@ -647,8 +660,8 @@ let prefersReducedMotion = window.matchMedia &&
       let handles = [];
       extras.forEach(function(li, i) {
         let a = li.querySelector('a');
-        if (prefersReducedMotion) {
-          li.style.display = 'list-item'; // nth-child gizlemesini gecersiz kil (aninda goster)
+        if (instant || prefersReducedMotion) {
+          li.style.display = 'list-item'; // aninda goster (dil-restore veya hareket azaltma)
           return;
         }
         setTimeout(function() {
@@ -665,7 +678,7 @@ let prefersReducedMotion = window.matchMedia &&
 
       // Son link eklenip kaymasi bitince tum giris glitch'lerini birlikte durdur.
       // (Hover'da yine normal sekilde calismaya devam ederler.)
-      if (!prefersReducedMotion) {
+      if (!instant && !prefersReducedMotion) {
         let totalMs = (extras.length - 1) * STAGGER + SLIDE;
         setTimeout(function() {
           handles.forEach(function(r) { r.stop(); });
@@ -687,6 +700,28 @@ let prefersReducedMotion = window.matchMedia &&
           expandProjects();
         }
       });
+    }
+
+    // Dil degisiminde acik kalma: dil degistirici sayfayi yeniliyor (bkz. i18n.js).
+    // Yenileme oncesi projeler ACIKSA sessionStorage'a tek-kullanimlik bayrak konur;
+    // burada okuyup projeleri ANIMASYONSUZ geri aciyoruz. Bayrak hemen tuketildigi icin
+    // sonraki manuel F5'te acilmaz (kullanicinin istedigi davranis). Intro bittiginde
+    // (#intro DOM'dan kalkinca -> glitch klonlari temizlenmis olur) aciyoruz ki
+    // top-anchor margin'i intro klonlarini bozmasin.
+    var shouldRestore = false;
+    try { shouldRestore = sessionStorage.getItem('keepProjects') === '1'; } catch (_) {}
+    if (shouldRestore) {
+      try { sessionStorage.removeItem('keepProjects'); } catch (_) {}
+      var doRestore = function () { expandProjects(true); }; // opened guard -> tek sefer
+      if (!document.getElementById('intro')) {
+        doRestore(); // intro yok (or. reduced-motion): hemen ac
+      } else {
+        var obs = new MutationObserver(function () {
+          if (!document.getElementById('intro')) { obs.disconnect(); doRestore(); }
+        });
+        obs.observe(document.body, { childList: true });
+        setTimeout(function () { obs.disconnect(); doRestore(); }, 4000); // yedek: intro takilirsa
+      }
     }
   })();
 })();

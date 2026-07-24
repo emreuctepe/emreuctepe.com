@@ -42,6 +42,11 @@
     a.addEventListener('click', function(e) {
       e.preventDefault();
       localStorage.setItem('lang', a.getAttribute('data-lang'));
+      // Projeler o an ACIKSA, dil degisikligi sonrasi (reload) acik kalsin diye
+      // tek-kullanimlik bayrak birak (mv.js yeni yuklemede okuyup animasyonsuz acar).
+      if (window.__projectsExpanded) {
+        try { sessionStorage.setItem('keepProjects', '1'); } catch (_) {}
+      }
       window.location.reload();
     });
   });
