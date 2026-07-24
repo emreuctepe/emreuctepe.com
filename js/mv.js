@@ -199,8 +199,12 @@ function cloneAndStripeElement(element, clipPathName, parent) {
 
   dynamics.css(el, {
     position: 'absolute',
-    left: Math.round(box.left + window.scrollX),
-    top: Math.round(box.top + window.scrollY),
+    // box.left/top zaten parent'a (getBoundingClientRect farkiyla) gore hesaplandi ve
+    // bu deger dogru dokuman koordinatidir; ayrica window.scroll eklemek kaydirma
+    // offset'ini CIFT sayar -> sayfa kaydirilmis haldeyken (overflow) hover klonlari
+    // scrollY kadar asagi kayardi. Intro'da scrollY=0 oldugu icin davranis degismez.
+    left: Math.round(box.left),
+    top: Math.round(box.top),
     width: Math.ceil(box.width),
     height: Math.ceil(box.height),
     display: 'none',
@@ -430,9 +434,12 @@ let prefersReducedMotion = window.matchMedia &&
 
   function animateLink(el) {
     let animating = true;
-    let box = el.getBoundingClientRect();
 
     let animate = function() {
+      // box her donguste yeniden okunur: link (or. "Diger Projeler" acilis kaymasi
+      // sirasinda) hareket ediyorsa glitch klonlari onu takip etsin. Duragan
+      // linklerde (normal hover) box degismez, davranis aynidir.
+      let box = el.getBoundingClientRect();
       let masks = createMasksWithStripes(3, box, 3);
       let clonedEls = [];
 
@@ -506,8 +513,17 @@ let prefersReducedMotion = window.matchMedia &&
   // Not: yukaridaki linkEls sayfa yuklenirken yakalandigi icin intro'nun gecici
   // klonlarini da iceriyordu; burada cagri aninda CANLI linkler sorgulaniyor (o an
   // klonlar temizlenmis) - boylece sadece gercek 16 link boyanir ve tur suresi dogru.
+  // Sadece GORUNUR linkler: gizli .extra proje linkleri (acilmadan display:none) ve
+  // gizlenmis "Diger Projeler" butonu tura dahil OLMASIN - yoksa tur onlara ugrarken
+  // gorunmeyen bir "olu zaman" bosluk olusur. display:none zincirinde offsetParent null olur.
+  function visibleLinks() {
+    return Array.prototype.slice.call(document.querySelectorAll('a')).filter(function(el) {
+      return el.offsetParent !== null;
+    });
+  }
+
   function demoAllLinksOnce() {
-    Array.prototype.slice.call(document.querySelectorAll('a')).forEach(function(el, i) {
+    visibleLinks().forEach(function(el, i) {
       setTimeout(function() {
         let color = window.randomVividColor();
         let paths = el.querySelectorAll('svg path');
@@ -520,8 +536,8 @@ let prefersReducedMotion = window.matchMedia &&
         setTimeout(function() {
           el.style.color = prevColor;
           paths.forEach(function(p, k) { p.style.fill = prevFills[k]; });
-        }, 750);
-      }, i * 75);
+        }, 500);
+      }, i * 50);
     });
   }
   // Hareket azaltma tercihinde otomatik "tanitim" turunu ve tekrarini atla.
@@ -532,7 +548,7 @@ let prefersReducedMotion = window.matchMedia &&
       // Turun toplam suresi link sayisina + link basina gecikmeye bagli. Sabit/kisa
       // aralik olursa turlar ust uste biner - o yuzden tekrar araligi, ILK tur sonrasi
       // (klonlar temizlenmisken) gercek link sayisina gore hesaplaniyor.
-      let tourMs = document.querySelectorAll('a').length * 100 + 200;
+      let tourMs = visibleLinks().length * 100 + 200;
       let pauseMs = 15000;
       setInterval(function() {
         if (!isHoverAnimating) {
@@ -541,4 +557,134 @@ let prefersReducedMotion = window.matchMedia &&
       }, tourMs + pauseMs);
     }, 2800);
   }
+
+  // Masaustu dikey duzen (mobil <=800px bunlarin disinda, CSS'e birakilir):
+  //  - VARSAYILAN (duruş + intro): dikey ORTALI. body align-items:center (CSS),
+  //    header hucrede ortali + sticky. Intro'nun glitch klonlari #page'e gore
+  //    konumlandigindan, bu asamada #page'e margin VERMIYORUZ -> klonlar bozulmaz.
+  //  - Proje listesi ACILINCA (projectsExpanded=true): top-anchor'a gecilir -> body
+  //    flex-start, header align-self:start, #page marginTop = (viewport - kapaliYuk)/2.
+  //    Boylece icerik sadece ASAGI buyur, ust konum donuk kalir, header KIMILDAMAZ.
+  //    Intro coktan bittigi icin klon koordinatlarini etkilemez.
+  let pageHeaderEl = document.querySelector('#page > header');
+  let projectsExpanded = false;
+  let collapsedPageHeight = 0;
+  function placeLayout() {
+    if (!pageHeaderEl || !pageEl) return;
+    // Varsayilan (duruş/intro) ve mobil: HICBIR inline duzen yok -> CSS'e birak.
+    // Boylece intro glitch klonlari dogru konumlanir (sticky/margin mudahalesi yok).
+    if (!projectsExpanded || window.innerWidth <= 800) {
+      document.body.style.alignItems = '';
+      pageEl.style.marginTop = '';
+      pageHeaderEl.style.position = '';
+      pageHeaderEl.style.alignSelf = '';
+      pageHeaderEl.style.top = '';
+      return;
+    }
+    // Proje listesi acildiktan sonra (masaustu): top-anchor + header dikey ORTADA sticky.
+    // #page marginTop, KAPALI yukseklige gore donuk -> icerik asagi buyur, ust sabit.
+    // header align-self:start (icerik buyurken kimildamaz) + sticky merkez top'a klipsler.
+    document.body.style.alignItems = 'flex-start';
+    pageEl.style.marginTop = Math.max(0, Math.round((window.innerHeight - collapsedPageHeight) / 2)) + 'px';
+    pageHeaderEl.style.position = 'sticky';
+    pageHeaderEl.style.alignSelf = 'start';
+    pageHeaderEl.style.top = Math.max(0, Math.round((window.innerHeight - pageHeaderEl.offsetHeight) / 2)) + 'px';
+  }
+  placeLayout();
+  window.addEventListener('load', placeLayout);
+  window.addEventListener('resize', placeLayout);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(placeLayout);
+  }
+
+  // --- "Diger Projeler" / "Projeler" basligi: tek kullanimlik, animasyonlu acilir liste ---
+  // Iki tetikleyici de ayni isi yapar: gizli duran ekstra proje satirlarini sirayla,
+  // hedefin biraz saginda baslayip ease ile sola kayarak ekler. Her satir kayarken o
+  // linkte glitch efekti (animateLink) acik kalir, yerlesince durur ("typewriter" hissi).
+  // Ekstra linklerin hover dinleyicileri zaten yukleme aninda linkEls uzerinden bagli
+  // (satir gizli olsa da DOM'da), o yuzden burada tekrar baglamiyoruz.
+  (function setupProjectExpand() {
+    let work = document.querySelector('#work');
+    if (!work) return;
+    let moreBtn = work.querySelector('a.more');
+    let heading = work.querySelector('h2');
+    let extras = Array.prototype.slice.call(work.querySelectorAll('li.extra'));
+    let opened = false;
+
+    const OFFSET = 28;   // baslangicta hedefin bu kadar sagi (px)
+    const STAGGER = 70;  // satirlar arasi gecikme (orijinalin 4x hizlisi)
+    const SLIDE = 130;   // her satirin kayma suresi (orijinalin 4x hizlisi)
+
+    function expandProjects() {
+      if (opened) return;
+      opened = true;
+
+      // Layout'u top-anchor'a gecir: SATIRLAR EKLENMEDEN ONCE, kapali yuksekligi olcup
+      // #page'i mevcut (ortali) konumunda dondur. Boylece icerik sadece ASAGI buyur ve
+      // header kimildamaz. (Intro coktan bitti; glitch klon koordinati etkilenmez.)
+      if (!projectsExpanded) {
+        collapsedPageHeight = pageEl.offsetHeight; // buyumeden once (satirlar hala gizli)
+        projectsExpanded = true;
+        placeLayout();
+      }
+
+      // "Diger Projeler" butonunu gizle + inaktif et (tek kullanimlik)
+      if (moreBtn) {
+        moreBtn.style.display = 'none';
+        moreBtn.setAttribute('aria-hidden', 'true');
+        moreBtn.tabIndex = -1;
+      }
+      // basligin tetikleyici rolunu de kaldir
+      if (heading) {
+        heading.removeAttribute('role');
+        heading.removeAttribute('tabindex');
+      }
+
+      // Giris glitch'leri tek tek durmaz; her eklenen link, TUM linkler eklenene kadar
+      // glitch'lemeye devam eder, sonra hepsi birlikte durur.
+      let handles = [];
+      extras.forEach(function(li, i) {
+        let a = li.querySelector('a');
+        if (prefersReducedMotion) {
+          li.classList.remove('extra'); // hareket azaltma: aninda goster
+          return;
+        }
+        setTimeout(function() {
+          li.classList.remove('extra'); // .extra{display:none} kuralindan cikar -> gorunur
+          dynamics.css(li, { translateX: OFFSET });
+          let r = a ? animateLink(a) : null; // giris sirasinda glitch acik
+          if (r) handles.push(r);
+          dynamics.animate(li, { translateX: 0 }, {
+            type: dynamics.easeOut,
+            duration: SLIDE,
+          });
+        }, i * STAGGER);
+      });
+
+      // Son link eklenip kaymasi bitince tum giris glitch'lerini birlikte durdur.
+      // (Hover'da yine normal sekilde calismaya devam ederler.)
+      if (!prefersReducedMotion) {
+        let totalMs = (extras.length - 1) * STAGGER + SLIDE;
+        setTimeout(function() {
+          handles.forEach(function(r) { r.stop(); });
+        }, totalMs);
+      }
+    }
+
+    if (moreBtn) {
+      moreBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        expandProjects();
+      });
+    }
+    if (heading) {
+      heading.addEventListener('click', expandProjects);
+      heading.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          expandProjects();
+        }
+      });
+    }
+  })();
 })();

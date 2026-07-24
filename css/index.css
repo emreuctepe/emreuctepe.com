@@ -23,6 +23,8 @@ body {
   min-height: 100%;
   display: flex;
   justify-content: center;
+  /* Varsayilan: dikey ortali (intro ve duruş gorunumu icin). Proje listesi acilinca
+     js/mv.js bunu inline 'flex-start'a cevirir (top-anchor) ki icerik asagi buyusun. */
   align-items: center;
 }
 
@@ -66,6 +68,9 @@ header {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  /* Duruş/intro halinde tamamen orijinal (mudahalesiz) - boylece intro glitch klonlari
+     dogru konumlanir. Proje listesi acilinca js/mv.js inline olarak sticky + align-self
+     + top + #page marginTop ekler (top-anchor, header sabit, icerik asagi buyur). */
 }
 
 #header-content {
@@ -181,6 +186,12 @@ section p a {
   color: var(--inline-link-color, #8E9094);
 }
 
+/* "Diger Projeler" tiklanmadan once gizli duran ekstra proje satirlari.
+   Tetiklenince js/mv.js sirayla gorunur yapip animasyonla ekler (expandProjects). */
+#work .extra {
+  display: none;
+}
+
 a.more {
   font-size: 16px;
   text-decoration: none;
@@ -230,5 +241,9 @@ a.more:hover .arrow {
     grid-row-gap: 5vh;
     grid-template-columns: 1fr;
     grid-auto-flow: row;
+  }
+  /* Tek sutunlu mobil duzende sabitleme kapali (header icerigi ortmasin). */
+  header {
+    position: static;
   }
 }
