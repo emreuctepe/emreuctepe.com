@@ -608,7 +608,9 @@ let prefersReducedMotion = window.matchMedia &&
     if (!work) return;
     let moreBtn = work.querySelector('a.more');
     let heading = work.querySelector('h2');
-    let extras = Array.prototype.slice.call(work.querySelectorAll('li.extra'));
+    // Ilk 3 li varsayilan gorunur (CSS nth-child ile), 4. ve sonrasi "extra" - sirayla
+    // acilacaklar. HTML'de li sirasi degistikce otomatik ayarlanir; elle sinif yok.
+    let extras = Array.prototype.slice.call(work.querySelectorAll('ul > li')).slice(3);
     let opened = false;
 
     const OFFSET = 28;   // baslangicta hedefin bu kadar sagi (px)
@@ -646,11 +648,11 @@ let prefersReducedMotion = window.matchMedia &&
       extras.forEach(function(li, i) {
         let a = li.querySelector('a');
         if (prefersReducedMotion) {
-          li.classList.remove('extra'); // hareket azaltma: aninda goster
+          li.style.display = 'list-item'; // nth-child gizlemesini gecersiz kil (aninda goster)
           return;
         }
         setTimeout(function() {
-          li.classList.remove('extra'); // .extra{display:none} kuralindan cikar -> gorunur
+          li.style.display = 'list-item'; // nth-child(n+4) gizlemesini gecersiz kil -> gorunur
           dynamics.css(li, { translateX: OFFSET });
           let r = a ? animateLink(a) : null; // giris sirasinda glitch acik
           if (r) handles.push(r);

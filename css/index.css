@@ -186,9 +186,11 @@ section p a {
   color: var(--inline-link-color, #8E9094);
 }
 
-/* "Diger Projeler" tiklanmadan once gizli duran ekstra proje satirlari.
-   Tetiklenince js/mv.js sirayla gorunur yapip animasyonla ekler (expandProjects). */
-#work .extra {
+/* Varsayilan: proje listesinin ILK 3 satiri gorunur; 4. ve sonrasi gizli durur.
+   "Diger Projeler" (veya "Projeler" basligi) tiklaninca js/mv.js bunlari sirayla
+   animasyonla acar. Boylece HTML'de li SIRASINI degistirmek yeterli - ilk 3 siteye
+   yansir, digerleri sonradan eklenir; elle .extra sinifi yonetmeye gerek yok. */
+#work ul li:nth-child(n+4) {
   display: none;
 }
 

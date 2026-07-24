@@ -9,6 +9,7 @@ window.I18N.en = {
   about_more: "[EN] İletişime Geç",
   work_title: "[EN] Projeler",
   work_more: "[EN] Diğer Projeler",
+  work_past: "--------------Past----------",
   project_1_desc: "[EN] Sosyal Dergi",
   project_2_desc: "[EN] Türkiye'yi tanıtmak bana mı kaldı kardeşim!",
   project_3_desc: "[EN] Rastgele Konu Seç",

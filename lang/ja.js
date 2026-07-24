@@ -9,6 +9,7 @@ window.I18N.ja = {
   about_more: "[JA] İletişime Geç",
   work_title: "[JA] Projeler",
   work_more: "[JA] Diğer Projeler",
+  work_past: "----------過去----------",
   project_1_desc: "[JA] Sosyal Dergi",
   project_2_desc: "[JA] Türkiye'yi tanıtmak bana mı kaldı kardeşim!",
   project_3_desc: "[JA] Rastgele Konu Seç",
