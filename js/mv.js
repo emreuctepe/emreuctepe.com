@@ -247,18 +247,6 @@ let originalContentEls = document.querySelectorAll('#header-content, #content');
     }
     el.style.visibility = 'hidden';
   }
-
-  // Intro'nun "toplanma" efektinde #header-content siyah zeminli seritli klonlarla
-  // beliriyor; klonlanan canvas bos oldugu icin profil resmi siyah bantlarla kaplaniyor.
-  // Onun yerine canli glitch gorunsun diye profil logosunu gorunur + klonlarin USTUNDE
-  // tutuyoruz (metin klonlari etkilenmez, normal toplaniyor). Profil glitch'i intro
-  // sirasinda zaten calisiyor (profile-glitch.js); sadece uste cikariyoruz.
-  let logoEl = document.querySelector('#header-logo');
-  if (logoEl) {
-    logoEl.style.visibility = 'visible';
-    logoEl.style.position = 'relative';
-    logoEl.style.zIndex = '2';
-  }
 })();
 
 function showContent() {
