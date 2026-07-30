@@ -44,11 +44,11 @@ window.STRINGS = {
   project_1_desc:   { tr: "Aylık Sosyal Dergi", en: "Monthly Social Magazine", ja: "毎月雑誌" },
   project_1_meta:   { tr: "dergi.com", en: "dergi.com", ja: "" },
   project_2_desc:   { tr: "Türkiye'yi tanıtmak bana mı kaldı kardeşim!", en: "Guess promoting Türkiye is down to me!", ja: "" }, // GOZDEN GECIR: deyimsel, birebir cevrilmiyor
-  project_2_meta:   { tr: "YouTube Podcast", en: "YouTube Podcast", ja: "ポッドカスと" },
-  project_3_desc:   { tr: "Rastgele Konu Seç", en: "Pick a Random Topic", ja: "" },
-  project_3_meta:   { tr: "randomtopik.com", en: "randomtopik.com", ja: "" },
+  project_2_meta:   { tr: "YouTube Podcast", en: "YouTube Podcast", ja: "ポットキャスト" },
+  project_3_desc:   { tr: "Rastgele Konu Seç", en: "Pick a Random Topic", ja: "ランドムトピックを選ぶ" },
+  project_3_meta:   { tr: "emreuctepe.github.io/random-topik/", en: "emreuctepe.github.io/random-topik/", ja: "emreuctepe.github.io/random-topik/" },
   project_6_desc:   { tr: "Osman", en: "Osman", ja: "" },
-  project_6_meta:   { tr: "Diriliş: Ertuğrul Dizi", en: "Diriliş: Ertuğrul (TV series)", ja: "" },
+  project_6_meta:   { tr: "Diriliş: Ertuğrul Dizi S5/B1-B29", en: "Resurrection Ertugrul S5/E1-E29 (TV series)", ja: "" },
   project_7_desc:   { tr: "Naci", en: "Naci", ja: "" },
   project_7_meta:   { tr: "Başarmalısın film", en: "Başarmalısın (film)", ja: "映画" },
   project_8_desc:   { tr: "Hakan", en: "Hakan", ja: "" },
@@ -81,5 +81,5 @@ window.STRINGS = {
   // basligi cevirmek okuyucuyu anlamadigi bir metne goturur. Ozgun baslik kalir.
   article_1_title:  { tr: "大好きな図書館:IPA", en: "大好きな図書館:IPA", ja: "" },
   article_2_title:  { tr: "Japon Modernleşmesine Farklı Bir Bakış", en: "Japon Modernleşmesine Farklı Bir Bakış", ja: "" },
-  article_3_title:  { tr: "A Thrilled Love Story In The Old Train with Grapphities", en: "A Thrilled Love Story In The Old Train with Grapphities", ja: "" },
+  article_3_title:  { tr: "Speaking Club Ideas", en: "Speaking Club Ideas", ja: "Speaking Club Ideas" },
 };

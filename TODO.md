@@ -22,12 +22,16 @@ sayfası servis ediyor (114 byte, `/lander`'a yönlendiriyor; IP 15.197.148.33 /
 
 Her biri `href="#"`. Tıklanınca `target="_blank"` yüzünden **boş sekme açıyor**.
 
+Bunlar öncelikle bir **UX** sorunu, SEO değil: Google için `href="#"` kırık link
+sayılmaz, sayfa içi çapadır — 404 üretmez, crawl hatası vermez. Zarar, tıklayan
+kullanıcının boş sekmeyle karşılaşması.
+
 - [ ] [index.html:74](index.html:74) — **Aylık Sosyal Dergi** (dergi.com): URL yok. `dergi.com` başkasına ait, gerçek adres gerekiyor
 - [ ] [index.html:75](index.html:75) — **Türkiye'yi tanıtmak bana mı kaldı kardeşim!** (YouTube Podcast): YouTube playlist/video linki ekle — kanal `@emreuctepee`
-- [ ] [index.html:76](index.html:76) — **Rastgele Konu Seç** (randomtopik.com): domain DNS'te çözülmüyor, site yayında değil
+- [x] [index.html:76](index.html:76) — **Rastgele Konu Seç**: `emreuctepe.github.io/random-topik/` adresine bağlandı (randomtopik.com domaini çözülmüyordu)
 - [ ] [index.html:81](index.html:81) — **Türk Hava Yolları** (Reklam Filmi): YouTube linki ekle
 - [ ] [index.html:82](index.html:82) — **Dettol** (Reklam Filmi): YouTube linki ekle
-- [ ] [index.html:100](index.html:100) — **A Thrilled Love Story In The Old Train with Grapphities**: Medium linki ekle
+- [x] [index.html:100](index.html:100) — Yazı **Speaking Club Ideas** olarak değiştirildi ve Medium'a bağlandı
 
 Bu satırlar `lang/strings.js`'te de var — URL eklerken metni değiştirirsen
 tablonun `tr` **ve** `en` sütunlarını birlikte güncelle.
@@ -43,8 +47,34 @@ tablonun `tr` **ve** `en` sütunlarını birlikte güncelle.
 [index.html:84-90](index.html:84) arasındaki 7 satır yorum içinde, hepsi `href="#"`.
 Aktifleştirmeden önce URL gerekiyor.
 
+**SEO etkisi yok.** Arama motorları HTML'i parse ederken comment node'larını atar:
+o satırlar indekslenecek içerik sayılmaz, link grafiğine girmez, crawl isteği
+doğurmaz. ("Yorumdaki gizli metin" eski bir SEO efsanesi; Google uzun süredir
+tamamen yok sayıyor.) Geriye iki gerçek maliyet kalıyor:
+
+1. **Kaynak görüntüleme** — "view source" diyen herkes yayınlanmamış proje
+   adlarını görüyor. İfşa meselesi, SEO değil.
+2. **Coverage paydası** — aşağıdaki maddeye bak; asıl pratik sorun bu.
+
 - [ ] Project G, Kayseray takip, Historical Card Game, "Good Chat", KargaManga Card Game, benkyoutorukogo.com, Damn! A lot
 - [ ] `proje203.com` (5 satırda geçiyor) ve `benkyoutorukogo.com` **DNS'te çözülmüyor** — bu siteler yayında değil
+
+### Coverage paydası görünmeyen satırları da sayıyor
+
+`build.py`'nin `coverage()` fonksiyonu tablodaki **tüm** key'leri sayıyor, ama
+14 key yorum içindeki (yani hiç görünmeyen) satırlara ait:
+
+| | key sayısı |
+| --- | --- |
+| tabloda toplam | 47 |
+| yorum içinde kalan | 14 |
+| gerçekten görünen | **33** |
+
+Sonuç: Japoncanın %90 eşiğini geçmesi için 43 key çevirmen gerekiyor — bunun 14'ü
+kimsenin göremeyeceği satırlar. Sadece görünenler sayılsa 30 yeterdi.
+Şu anki JA durumu: **11/47 = %23**, ama sadece görünenlerde **11/33 = %33**.
+
+- [ ] `coverage()` yalnızca `index.html`'de (yorum dışında) gerçekten kullanılan key'leri saysın
 
 ---
 
@@ -54,10 +84,34 @@ Aktifleştirmeden önce URL gerekiyor.
 - [ ] `lang/strings.js`'te `GOZDEN GECIR` işaretli iki satırı onayla:
   - `about_text` — kişisel biyografi, ton sana ait. "(Erü)" → "Erciyes University" olarak açıldı
   - `project_2_desc` — deyimsel ifade, birebir çevrilmiyor
-- [ ] **Japonca %17 (8/47)** — `/ja/` üretilmiyor. Tabloyu doldur
-- [ ] JA yazım hatası: [lang/strings.js:43](lang/strings.js:43) `project_2_meta` = `ポッドカスと` → doğrusu **`ポッドキャスト`**
-- [ ] JA kontrol: [lang/strings.js:18](lang/strings.js:18) ve [:26](lang/strings.js:26) `ヱムレ・ウチュテペ` — `ヱ` arkaik "we" kanası. Kasıtlı değilse `エムレ`
+- [ ] **Japonca %23 (11/47)** — `/ja/` üretilmiyor. Tabloyu doldur
 - [ ] JA %90'a ulaşana kadar [index.html:17](index.html:17) `hreflang="ja"` satırını kaldır — şu an var olmayan bir sayfayı arama motoruna duyuruyor
+
+### Tüm dil hatalarını gözden geçir
+
+`lang/strings.js` üç dili birden tutuyor ve tablo elle dolduruldukça yazım
+hataları birikiyor. Tek seferde baştan sona oku, üç sütunu da revize et.
+
+- [ ] **Japoncayı baştan sona revize et.** Bilinen adaylar:
+  - `project_2_meta` = `ポットキャスト` → standart yazım **`ポッドキャスト`** (`ポット` = "pot")
+  - `project_3_desc` = `ランドムトピックを選ぶ` → "random" standart yazımı **`ランダム`**
+  - `page_title` / `name` = `ヱムレ・ウチュテペ` — `ヱ` arkaik "we" kanası; stilistik tercihse kalsın, değilse `エムレ`
+  - `project_1_desc` = `毎月雑誌` → "aylık dergi" için `月刊誌` daha yerleşik
+- [ ] **Türkçe ve İngilizce sütunları da oku** — özellikle `GOZDEN GECIR` işaretli iki satır ve elle eklenen yeni metinler
+
+### index.html ile tablonun `tr` sütunu ayrışmış
+
+README kuralı: Türkçe metin iki yerde duruyor, ikisi birlikte güncellenmeli.
+Şu an bir satır ayrışmış durumda:
+
+| key | index.html | strings.js `tr` |
+| --- | --- | --- |
+| `project_6_meta` | `Diriliş: Ertuğrul Dizi` | `Diriliş: Ertuğrul Dizi S5/B1-B29` |
+
+Sonuç: kök sayfa (JS yüklenene kadar) kısa metni, `/en/` ve dil değişimi sonrası
+uzun metni gösteriyor.
+
+- [ ] Hangisi doğruysa ikisini eşitle
 
 ---
 
