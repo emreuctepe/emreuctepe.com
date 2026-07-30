@@ -67,11 +67,15 @@
       if (window.__projectsExpanded) {
         try { sessionStorage.setItem('keepProjects', '1'); } catch (_) {}
       }
+      // Secim HER IKI modda da kaydedilir. Statik sayfada bu sart: kullanici
+      // /en/ uzerinden TR'ye tiklayinca tarayici koke gider ve kok sayfa dili
+      // localStorage'dan okur - yazilmazsa orada eski secim ("en") duruyor ve
+      // Turkce isteyen kullaniciya Ingilizce gosterilirdi.
+      try { localStorage.setItem('lang', a.getAttribute('data-lang')); } catch (_) {}
       if (isStatic) {
         return; // href gercek bir sayfaya gidiyor; tarayici devrali.
       }
       e.preventDefault();
-      localStorage.setItem('lang', a.getAttribute('data-lang'));
       window.location.reload();
     });
   });
