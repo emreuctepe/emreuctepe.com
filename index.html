@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Emre Üçtepe</title>
-  <meta name="description" content="Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.">
+  <title data-i18n="page_title">Emre Üçtepe</title>
+  <meta name="description" data-i18n-content="page_desc" content="Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Emre Üçtepe">
-  <meta property="og:description" content="Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.">
+  <meta property="og:title" data-i18n-content="page_title" content="Emre Üçtepe">
+  <meta property="og:description" data-i18n-content="page_desc" content="Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.">
   <meta property="og:url" content="https://emreuctepe.com/">
 
   <link rel="canonical" href="https://emreuctepe.com/">
-  <link rel="alternate" hreflang="tr" href="https://emreuctepe.com/?lang=tr">
-  <link rel="alternate" hreflang="en" href="https://emreuctepe.com/?lang=en">
-  <link rel="alternate" hreflang="ja" href="https://emreuctepe.com/?lang=ja">
+  <link rel="alternate" hreflang="tr" href="https://emreuctepe.com/">
+  <link rel="alternate" hreflang="en" href="https://emreuctepe.com/en/">
+  <link rel="alternate" hreflang="ja" href="https://emreuctepe.com/ja/">
   <link rel="alternate" hreflang="x-default" href="https://emreuctepe.com/">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,12 +30,12 @@
     <header>
       <div id="header-content">
         <div id="header-logo">
-          <div id="profile-glitch-canvas" role="img" aria-label="Emre Üçtepe profil fotoğrafı"></div>
+          <div id="profile-glitch-canvas" role="img" data-i18n-label="profile_alt" aria-label="Emre Üçtepe profil fotoğrafı"></div>
         </div>
-        <h1>Emre Üçtepe</h1>
+        <h1 data-i18n="name">Emre Üçtepe</h1>
         <p data-i18n="country">Türkiye</p>
         <div id="contact">
-          <a href="mailto:contact@emreuctepe.com" id="email" aria-label="E-posta gönder" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 42 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M3.025 5.255A1.99 1.99 0 0 1 4.003 5h33.994c.354 0 .688.093.977.256L21 18.5 3.025 5.255zm-1.002 1.45c-.015.098-.023.2-.023.302V18.28v-5.636 17.35C2 31.1 2.902 32 4.003 32h33.994A2.005 2.005 0 0 0 40 29.993v-17.35 5.638V7.008c0-.103-.008-.204-.023-.303L21 20.687 2.023 6.704z"/></svg></a>
+          <a href="mailto:contact@emreuctepe.com" id="email" data-i18n-label="email_label" aria-label="E-posta gönder" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 42 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M3.025 5.255A1.99 1.99 0 0 1 4.003 5h33.994c.354 0 .688.093.977.256L21 18.5 3.025 5.255zm-1.002 1.45c-.015.098-.023.2-.023.302V18.28v-5.636 17.35C2 31.1 2.902 32 4.003 32h33.994A2.005 2.005 0 0 0 40 29.993v-17.35 5.638V7.008c0-.103-.008-.204-.023-.303L21 20.687 2.023 6.704z"/></svg></a>
 
           <a href="https://github.com/emreuctepe" id="github" aria-label="GitHub" rel="noopener noreferrer" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 36" aria-hidden="true" focusable="false">
@@ -103,12 +103,11 @@
   </div>
   <!-- Not: p5.js (~950KB) ve tinycolor (35KB) kaldirildi; glitch efekti saf Canvas 2D
        ile, renk uretimi ise js/color.js yardimcisi ile yapiliyor. defer sirasi korunur:
-       color.js -> random-link-color/mv; dynamics -> mv; lang/* -> i18n -> mv. -->
+       color.js -> random-link-color/mv; dynamics -> mv; lang/strings -> i18n -> mv. -->
   <script defer src="js/color.js"></script>
   <script defer src="js/dynamics.js"></script>
   <script defer src="js/random-link-color.js"></script>
-  <script defer src="lang/en.js"></script>
-  <script defer src="lang/ja.js"></script>
+  <script defer src="lang/strings.js"></script>
   <script defer src="js/i18n.js"></script>
   <script defer src="js/mv.js"></script>
   <script defer src="js/profile-glitch.js"></script>

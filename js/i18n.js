@@ -2,51 +2,76 @@
 
 // Bu script mv.js'ten ONCE calismali (index.html'de script sirasina dikkat) -
 // mv.js sayfa yuklenirken metni klonlayip glitch efektine hazirliyor, o klonlama
-// olmadan once metnin dogru dilde olmasi lazim. Ceviri sozlukleri (lang/*.js)
+// olmadan once metnin dogru dilde olmasi lazim. Ceviri tablosu (lang/strings.js)
 // fetch degil, normal <script src> ile senkron yuklendigi icin bu mumkun.
 //
-// DIL MIMARISI: Turkce (sitenin varsayilan dili) icin ayri bir sozluk YOK -
-// Turkce metin dogrudan index.html icinde, data-i18n elemanlarinin govdesinde
-// yasar (tek kaynak). Asagidaki dongude tr icin I18N.tr tanimsiz oldugundan dict
-// bos kalir ve HTML metnine dokunulmaz. Sadece EN/JA icin lang/en.js, lang/ja.js
-// sozlukleri var. Yani Turkce metni degistirmek icin index.html'i duzenle.
+// DIL MIMARISI: tum diller tek bir tabloda, key basina bir satir halinde
+// (lang/strings.js). Bir metnin karsiligi bos ise ("" veya tanimsiz) o elemana
+// hic dokunulmaz, index.html'in govdesindeki Turkce metin oldugu gibi kalir.
+// Yani JS yuklenmese/kapali olsa bile site Turkce olarak calisir.
+//
+// IKI CALISMA MODU var:
+//   1. Kok sayfa (index.html) - Turkce kaynak. Dil secimi calisma aninda,
+//      ?lang= / localStorage ile yapilir; metin JS ile degistirilir.
+//   2. build.py'nin urettigi /en/, /ja/ sayfalari - metin zaten HTML'e gomulu.
+//      <html data-i18n-static> tasirlar; burada ceviri ADIMI ATLANIR, sadece
+//      dil secicinin gorunumu ve tiklama davranisi ayarlanir. Bu sayfalarda
+//      secici gercek <a href> oldugu icin JS kapaliyken de calisir.
 (function() {
-  let supported = ['tr', 'en', 'ja'];
-  let params = new URLSearchParams(window.location.search);
-  let lang = params.get('lang') || localStorage.getItem('lang');
-  if (!lang) {
-    // Ilk ziyaret: URL'de ?lang= yok, localStorage'da secim yok - tarayicinin/
-    // isletim sisteminin dilini dene, desteklenmiyorsa Turkce'ye dus.
-    let browserLang = (navigator.language || navigator.userLanguage || '').slice(0, 2).toLowerCase();
-    lang = browserLang;
-  }
-  if (supported.indexOf(lang) === -1) {
-    lang = 'tr';
-  }
+  let SUPPORTED = ['tr', 'en', 'ja'];
+  let isStatic = document.documentElement.hasAttribute('data-i18n-static');
+  let lang;
 
-  let dict = window.I18N && window.I18N[lang];
-  if (dict) {
-    document.querySelectorAll('[data-i18n]').forEach(function(el) {
-      let key = el.getAttribute('data-i18n');
-      if (dict[key] != null) {
-        el.textContent = dict[key];
-      }
-    });
+  if (isStatic) {
+    // Sayfanin dili URL'den belli; kullanicinin onceki secimi burada gecersiz.
+    lang = document.documentElement.lang;
+  } else {
+    let params = new URLSearchParams(window.location.search);
+    lang = params.get('lang') || localStorage.getItem('lang');
+    if (!lang) {
+      // Ilk ziyaret: URL'de ?lang= yok, localStorage'da secim yok - tarayicinin/
+      // isletim sisteminin dilini dene, desteklenmiyorsa Turkce'ye dus.
+      lang = (navigator.language || navigator.userLanguage || '').slice(0, 2).toLowerCase();
+    }
+    if (SUPPORTED.indexOf(lang) === -1) {
+      lang = 'tr';
+    }
+
+    // Uc yerlestirme bicimi var, ucu de ayni tabloyu kullanir:
+    //   data-i18n         -> elemanin metni      (<h2 data-i18n="about_title">)
+    //   data-i18n-content -> content attribute'u (<meta data-i18n-content="page_desc">)
+    //   data-i18n-label   -> aria-label          (ekran okuyucu metni)
+    let strings = window.STRINGS || {};
+    function apply(attr, setter) {
+      document.querySelectorAll('[' + attr + ']').forEach(function(el) {
+        let row = strings[el.getAttribute(attr)];
+        if (row && row[lang]) {
+          setter(el, row[lang]);
+        }
+      });
+    }
+    apply('data-i18n',         function(el, v) { el.textContent = v; });
+    apply('data-i18n-content', function(el, v) { el.setAttribute('content', v); });
+    apply('data-i18n-label',   function(el, v) { el.setAttribute('aria-label', v); });
+
+    document.documentElement.lang = lang;
   }
-  document.documentElement.lang = lang;
 
   document.querySelectorAll('#lang-switcher a').forEach(function(a) {
     if (a.getAttribute('data-lang') === lang) {
       a.classList.add('active');
     }
     a.addEventListener('click', function(e) {
-      e.preventDefault();
-      localStorage.setItem('lang', a.getAttribute('data-lang'));
-      // Projeler o an ACIKSA, dil degisikligi sonrasi (reload) acik kalsin diye
+      // Projeler o an ACIKSA, dil degisikliginden sonra acik kalsin diye
       // tek-kullanimlik bayrak birak (mv.js yeni yuklemede okuyup animasyonsuz acar).
       if (window.__projectsExpanded) {
         try { sessionStorage.setItem('keepProjects', '1'); } catch (_) {}
       }
+      if (isStatic) {
+        return; // href gercek bir sayfaya gidiyor; tarayici devrali.
+      }
+      e.preventDefault();
+      localStorage.setItem('lang', a.getAttribute('data-lang'));
       window.location.reload();
     });
   });
