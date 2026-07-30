@@ -1,1 +1,4 @@
 __pycache__/
+
+# Yerel araç ayarları (Claude Code'un dev sunucusu tanımı dahil)
+.claude/
