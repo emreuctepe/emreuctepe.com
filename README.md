@@ -10,6 +10,11 @@ sadece bu dosyayı düzenle.
 
 Boş hücre (`""`) = "henüz çevrilmedi" demek; o metin Türkçe kalır, site bozulmaz.
 
+**Ama metin hedef dilde aynı kalacaksa hücreyi boş bırakma — Türkçesini kopyala.**
+Özel isimler, alan adları, dizi/film adları için geçerli. Boş hücre build için
+"çevrilmedi" sayılır ve aşağıdaki %90 eşiğini aşağı çeker; tabloda böyle ~19 satır
+var, hepsi boş kalırsa o dil hiç üretilemez.
+
 Türkçe metin `index.html` içinde de duruyor (JS yüklenmeden önce görünen metin).
 Bir Türkçe metni değiştirirken hem `index.html`'i hem tablonun `tr` sütununu
 güncelle.
