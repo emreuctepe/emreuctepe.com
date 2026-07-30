@@ -23,6 +23,10 @@
 
   <link rel="stylesheet" href="css/index.css">
   <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+  <!-- Yukleme ekranini mv.js kaldiriyor; JS kapaliysa hic gosterme (yoksa
+       sayfayi kalici olarak orterdi - site JS'siz de calismali). -->
+  <noscript><style>#loader { display: none; }</style></noscript>
 </head>
 <body>
   <svg id="clip-paths" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g></g></svg>
@@ -103,6 +107,9 @@
     <div id="logo-container" class="full-size"></div>
     <svg id="stripes" class="full-size" width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
   </div>
+  <!-- #intro'dan SONRA gelir ki (z-index yok, DOM sirasi karar verir) intro
+       hazirlanirken onun ustunde dursun. Bicimi css/index.css'te. -->
+  <div id="loader" class="full-size" aria-hidden="true"><span></span></div>
   <!-- Not: p5.js (~950KB) ve tinycolor (35KB) kaldirildi; glitch efekti saf Canvas 2D
        ile, renk uretimi ise js/color.js yardimcisi ile yapiliyor. defer sirasi korunur:
        color.js -> random-link-color/mv; dynamics -> mv; lang/strings -> i18n -> mv. -->

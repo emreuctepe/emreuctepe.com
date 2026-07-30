@@ -302,6 +302,17 @@ let prefersReducedMotion = window.matchMedia &&
 
 // intro
 (function() {
+  // Yukleme ekranini burada birakiyoruz: bu satira gelindiyse defer'li scriptlerin
+  // hepsi indi ve intro baslamak uzere. Once soluklastir (CSS gecisi), sonra DOM'dan
+  // cikar - boylece yukleme cizgisi glitch'in uzerine capraz gecisle devrediyor.
+  let loaderEl = document.querySelector('#loader');
+  if (loaderEl) {
+    loaderEl.classList.add('is-loaded');
+    setTimeout(function() {
+      if (loaderEl.parentNode) loaderEl.parentNode.removeChild(loaderEl);
+    }, 300); // CSS'teki 250ms gecis + pay
+  }
+
   // Hareket hassasiyeti olan kullanicilar icin: agir serit/logo animasyonunu
   // tamamen atla, icerigi dogrudan goster ve intro katmanini kaldir.
   if (prefersReducedMotion) {
