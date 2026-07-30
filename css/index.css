@@ -339,3 +339,40 @@ a.more:hover .arrow {
     position: static;
   }
 }
+
+/* Dokunma hedefleri. Olcum (375px): liste linkleri 21.8px yuksekliginde ve
+   aralarinda 0.9px bosluk vardi - parmak ucu ayni anda 2-3 satiri kapatiyordu.
+   Dil secici 14.7x17.1px ile en kucugu. Hedefi gorunmez sekilde buyutmek
+   (pseudo-element hit alani) burada CARE DEGIL: bitisik satirlarda buyuyen
+   alanlar ust uste biner, belirsizlik yer degistirir sadece. O yuzden gercek
+   bosluk ekliyoruz ve satirlari ~44px'e (Apple HIG) cikariyoruz.
+
+   Sorgu max-width degil pointer:coarse: dert dokunmatikte, dar masaustu
+   penceresinde degil. Ayrica mv.js:515 hover glitch'ini 'ontouchstart' ile
+   zaten kapatiyor - ayni kitleyi hedefleyince glitch klonlarinin
+   getBoundingClientRect kutusu hicbir yerde padding'den etkilenmemis oluyor. */
+@media (pointer: coarse) {
+  /* Blok yapmak satiri bastan sona tiklanabilir kilar; dar metinlerde
+     ("Osman - ...") saga dogru isabetsiz dokunuslar da kurtulur. */
+  #work ul li a,
+  #articles ul li a {
+    display: block;
+    padding: 4px 0;
+  }
+
+  a.more {
+    display: inline-block;
+    padding: 12px 0;
+  }
+
+  /* Sayfanin en kucuk hedefleri. Ayiraclar ("·") yerinde kalsin diye
+     inline-block + yatay padding: TR/EN kutulari ~31x39px'e ciker. */
+  #lang-switcher {
+    padding-top: 12px;
+  }
+
+  #lang-switcher a {
+    display: inline-block;
+    padding: 11px 8px;
+  }
+}
