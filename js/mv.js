@@ -595,8 +595,26 @@ let prefersReducedMotion = window.matchMedia &&
   //    Boylece icerik sadece ASAGI buyur, ust konum donuk kalir, header KIMILDAMAZ.
   //    Intro coktan bittigi icin klon koordinatlarini etkilemez.
   let pageHeaderEl = document.querySelector('#page > header');
+  let workEl = document.querySelector('#work');
   let projectsExpanded = false;
-  let collapsedPageHeight = 0;
+
+  // #page yuksekligini liste HALA KAPALIYMIS gibi olcer (top-anchor referansi).
+  // 'is-expanded' kalkinca CSS hem ekstra satirlari gizler hem "Diger Projeler"i geri
+  // getirir -> kapali duzen birebir kurulur. Hide/measure/restore TEK senkron is parcasi:
+  // arada boyama olmaz, hicbir timer/rAF geri cagrimi gizli durumu goremez. (Bu sonuncusu
+  // onemli: animateLink her karede getBoundingClientRect okuyor; display:none bir agacta
+  // sifir doner ve glitch klonlari yanlis yere giderdi.)
+  // HER cagrida yeniden olculur: #page padding'i 10vh 10vw oldugundan kapali yukseklik
+  // viewport'un IKI boyutuna da bagli - tek seferlik onbellek bayatlar (bkz. resize).
+  function measureCollapsedPageHeight() {
+    if (!workEl || !pageEl) return 0;
+    var was = workEl.classList.contains('is-expanded');
+    workEl.classList.remove('is-expanded');
+    var h = pageEl.offsetHeight;
+    if (was) workEl.classList.add('is-expanded');
+    return h;
+  }
+
   function placeLayout() {
     if (!pageHeaderEl || !pageEl) return;
     // Varsayilan (duruş/intro) ve mobil: HICBIR inline duzen yok -> CSS'e birak.
@@ -610,17 +628,32 @@ let prefersReducedMotion = window.matchMedia &&
       return;
     }
     // Proje listesi acildiktan sonra (masaustu): top-anchor + header dikey ORTADA sticky.
-    // #page marginTop, KAPALI yukseklige gore donuk -> icerik asagi buyur, ust sabit.
+    // #page marginTop, o anki viewport'ta KAPALI olsaydi ne kadar olacagina gore -> icerik
+    // asagi buyur, ust sabit. Deger onbelleklenmez, her cagride yeniden olculur.
     // header align-self:start (icerik buyurken kimildamaz) + sticky merkez top'a klipsler.
     document.body.style.alignItems = 'flex-start';
-    pageEl.style.marginTop = Math.max(0, Math.round((window.innerHeight - collapsedPageHeight) / 2)) + 'px';
+    pageEl.style.marginTop = Math.max(0, Math.round((window.innerHeight - measureCollapsedPageHeight()) / 2)) + 'px';
     pageHeaderEl.style.position = 'sticky';
+    // DIKKAT: alignSelf YAZIMI, offsetHeight OKUMASINDAN once gelmeli - sirayi bozup
+    // "once okumalar, sonra yazmalar" diye toplama. Ilk cagride header hala gerilmis bir
+    // grid ogesi oldugundan satir yuksekligini (470) okur, kendi yuksekligini (270) degil
+    // -> sticky top 100px yanlis cikar.
     pageHeaderEl.style.alignSelf = 'start';
     pageHeaderEl.style.top = Math.max(0, Math.round((window.innerHeight - pageHeaderEl.offsetHeight) / 2)) + 'px';
   }
+
+  // Olcum artik her placeLayout'ta zorlanmis bir reflow; resize ise sik atesleniyor
+  // (pencere surukleme, tarayici zoom'u). Throttle YALNIZ dinleyicide: acilis yolundaki
+  // cagri (bkz. expandProjects) senkron kalmali, bir kare ertelemek top-anchor'in
+  // onlemek icin var oldugu sicramayi tam bir kare boyunca boyatirdi.
+  let layoutRaf = 0;
+  function schedulePlaceLayout() {
+    if (layoutRaf) return;
+    layoutRaf = requestAnimationFrame(function () { layoutRaf = 0; placeLayout(); });
+  }
   placeLayout();
   window.addEventListener('load', placeLayout);
-  window.addEventListener('resize', placeLayout);
+  window.addEventListener('resize', schedulePlaceLayout);
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(placeLayout);
   }
@@ -632,7 +665,7 @@ let prefersReducedMotion = window.matchMedia &&
   // Ekstra linklerin hover dinleyicileri zaten yukleme aninda linkEls uzerinden bagli
   // (satir gizli olsa da DOM'da), o yuzden burada tekrar baglamiyoruz.
   (function setupProjectExpand() {
-    let work = document.querySelector('#work');
+    let work = workEl;
     if (!work) return;
     let moreBtn = work.querySelector('a.more');
     let heading = work.querySelector('h2');
@@ -650,18 +683,19 @@ let prefersReducedMotion = window.matchMedia &&
       opened = true;
       window.__projectsExpanded = true; // dil degisiminde acik kalabilmesi icin (bkz. i18n.js)
 
-      // Layout'u top-anchor'a gecir: SATIRLAR EKLENMEDEN ONCE, kapali yuksekligi olcup
-      // #page'i mevcut (ortali) konumunda dondur. Boylece icerik sadece ASAGI buyur ve
-      // header kimildamaz. (Intro coktan bitti; glitch klon koordinati etkilenmez.)
+      // Layout'u top-anchor'a gecir: SATIRLAR EKLENMEDEN ONCE, #page'i mevcut (ortali)
+      // konumunda dondur. Boylece icerik sadece ASAGI buyur ve header kimildamaz.
+      // (Intro coktan bitti; glitch klon koordinati etkilenmez.)
       if (!projectsExpanded) {
-        collapsedPageHeight = pageEl.offsetHeight; // buyumeden once (satirlar hala gizli)
         projectsExpanded = true;
         placeLayout();
       }
 
-      // "Diger Projeler" butonunu gizle + inaktif et (tek kullanimlik)
+      // Acik duruma gec: CSS 'is-in' alan satirlari gosterir, "Diger Projeler"i gizler.
+      // Tek sinif oldugu icin measureCollapsedPageHeight bunu bir an geri alabiliyor.
+      work.classList.add('is-expanded');
+      // butonu inaktif de et (tek kullanimlik)
       if (moreBtn) {
-        moreBtn.style.display = 'none';
         moreBtn.setAttribute('aria-hidden', 'true');
         moreBtn.tabIndex = -1;
       }
@@ -677,11 +711,11 @@ let prefersReducedMotion = window.matchMedia &&
       extras.forEach(function(li, i) {
         let a = li.querySelector('a');
         if (instant || prefersReducedMotion) {
-          li.style.display = 'list-item'; // aninda goster (dil-restore veya hareket azaltma)
+          li.classList.add('is-in'); // aninda goster (hareket azaltma)
           return;
         }
         setTimeout(function() {
-          li.style.display = 'list-item'; // nth-child(n+4) gizlemesini gecersiz kil -> gorunur
+          li.classList.add('is-in'); // nth-child(n+4) gizlemesini gecersiz kil -> gorunur
           dynamics.css(li, { translateX: OFFSET });
           let r = a ? animateLink(a) : null; // giris sirasinda glitch acik
           if (r) handles.push(r);
@@ -709,7 +743,9 @@ let prefersReducedMotion = window.matchMedia &&
       });
     }
     if (heading) {
-      heading.addEventListener('click', expandProjects);
+      // Dikkat: dogrudan expandProjects BAGLANAMAZ - MouseEvent 'instant' parametresine
+      // gecer ve acilis animasyonu tamamen atlanirdi (Enter/Space ise animasyonlu acardi).
+      heading.addEventListener('click', function() { expandProjects(); });
       heading.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -720,17 +756,18 @@ let prefersReducedMotion = window.matchMedia &&
 
     // Dil degisiminde acik kalma: dil degistirici sayfayi yeniliyor (bkz. i18n.js).
     // Yenileme oncesi projeler ACIKSA sessionStorage'a tek-kullanimlik bayrak konur;
-    // burada okuyup projeleri ANIMASYONSUZ geri aciyoruz. Bayrak hemen tuketildigi icin
-    // sonraki manuel F5'te acilmaz (kullanicinin istedigi davranis). Intro bittiginde
-    // (#intro DOM'dan kalkinca -> glitch klonlari temizlenmis olur) aciyoruz ki
-    // top-anchor margin'i intro klonlarini bozmasin.
+    // burada okuyup butona suni bir tiklama gonderiyoruz -> mevcut click handler'i
+    // (expandProjects, kendi animasyonuyla birlikte) normal sekilde calisir. Bayrak
+    // hemen tuketildigi icin sonraki manuel F5'te acilmaz (kullanicinin istedigi davranis).
+    // Intro bittiginde (#intro DOM'dan kalkinca -> glitch klonlari temizlenmis olur)
+    // tikliyoruz ki top-anchor margin'i intro klonlarini bozmasin.
     var shouldRestore = false;
     try { shouldRestore = sessionStorage.getItem('keepProjects') === '1'; } catch (_) {}
     if (shouldRestore) {
       try { sessionStorage.removeItem('keepProjects'); } catch (_) {}
-      var doRestore = function () { expandProjects(true); }; // opened guard -> tek sefer
+      var doRestore = function () { if (moreBtn) moreBtn.click(); }; // opened guard -> tek sefer
       if (!document.getElementById('intro')) {
-        doRestore(); // intro yok (or. reduced-motion): hemen ac
+        doRestore(); // intro yok (or. reduced-motion): hemen tikla
       } else {
         var obs = new MutationObserver(function () {
           if (!document.getElementById('intro')) { obs.disconnect(); doRestore(); }

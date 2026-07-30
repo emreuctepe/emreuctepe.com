@@ -194,6 +194,17 @@ section p a {
   display: none;
 }
 
+/* Liste acildiginda (js/mv.js '#work'a 'is-expanded' ekler): sirayla 'is-in' alan
+   satirlar gorunur, tek kullanimlik "Diger Projeler" butonu kalkar. Acilis/kapanis TEK
+   sinifla ifade edildigi icin mv.js top-anchor'i yeniden olcerken sinifi bir an kaldirip
+   KAPALI duzeni birebir geri kurabiliyor (bkz. measureCollapsedPageHeight). */
+#work.is-expanded ul li.is-in {
+  display: list-item;
+}
+#work.is-expanded > a.more {
+  display: none;
+}
+
 a.more {
   font-size: 16px;
   text-decoration: none;
