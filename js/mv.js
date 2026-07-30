@@ -203,10 +203,18 @@ function cloneAndStripeElement(element, clipPathName, parent) {
     // bu deger dogru dokuman koordinatidir; ayrica window.scroll eklemek kaydirma
     // offset'ini CIFT sayar -> sayfa kaydirilmis haldeyken (overflow) hover klonlari
     // scrollY kadar asagi kayardi. Intro'da scrollY=0 oldugu icin davranis degismez.
-    left: Math.round(box.left),
-    top: Math.round(box.top),
-    width: Math.ceil(box.width),
-    height: Math.ceil(box.height),
+    // +2 / -1: getBoundingClientRect ORIJINALIN border-box'ini verir ve orijinalde
+    // border YOK. Klona 1px'lik dekoratif border ekleniyor ve box-sizing border-box
+    // oldugundan, telafi edilmezse icerik kutusu her kenardan 1px daralir. O 2px,
+    // metnin tam sigdigi satiri tasirmaya yetiyor: son kelime alt satira duser, klonun
+    // 22px'lik kutusunun disinda kalir ve clip-path ile kirpilir -> hover glitch'inde
+    // linkin SONU kayboluyordu (16 linkin 7'si). 2px buyutup 1px geri kaydirinca
+    // icerik+padding alani orijinalin border-box'i ile birebir ortusur, border ise
+    // tam onun disina cizilir.
+    left: Math.round(box.left) - 1,
+    top: Math.round(box.top) - 1,
+    width: Math.ceil(box.width) + 2,
+    height: Math.ceil(box.height) + 2,
     display: 'none',
     pointerEvents: 'none',
     background: '#101214',
@@ -214,6 +222,15 @@ function cloneAndStripeElement(element, clipPathName, parent) {
     fontFamily: style.fontFamily,
     color: style.color,
     textDecoration: style.textDecoration,
+    // Klon document.body'ye tasindigi icin ata gerektiren secicilerden (or.
+    // "#work ul li a") DUSER; padding'i miras alamaz, metni kutunun tepesine
+    // yapisir ve glitch orijinalden padding-top kadar yukarida cikardi.
+    // (a.more sinif tabanli oldugu icin bu dertten etkilenmiyordu.)
+    // width/height getBoundingClientRect'ten, yani border-box olcusu geliyor;
+    // padding'i geri verirken box-sizing'i de ona gore ayarliyoruz ki 1px
+    // border ve padding kutuyu buyutmesin.
+    boxSizing: 'border-box',
+    padding: style.padding,
     border: `1px solid ${borderColor}`,
   });
   parent.appendChild(el);
