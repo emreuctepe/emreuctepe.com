@@ -17,6 +17,11 @@ window.STRINGS = {
   name:             { tr: "Emre Üçtepe", en: "Emre Üçtepe", ja: "ヱムレ・ウチュテペ" },
   country:          { tr: "Türkiye", en: "Türkiye", ja: "トルコ" },
 
+  // Gizlilik sayfasi linki. Sayfanin KENDISI cevrilmis uc ayri dosya
+  // (privacy.html, en/privacy.html, ja/privacy.html) - build.py uretmiyor,
+  // elle yaziliyor. Burada sadece linkin gorunen metni duruyor.
+  privacy_link:     { tr: "Gizlilik", en: "Privacy", ja: "プライバシー" },
+
   // --- Hakkimda ---
   about_title:      { tr: "Hakkımda", en: "About Me", ja: "私について" },
   about_text:       { tr: "Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: "Hi. I'm studying Japanese Language and Literature at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into geometry, game programming and web apps.", ja: "こんにちは、エルジェス大学で日本語と日本文学を勉強しています。時々、テレビ、映画、広告などのプロジェックトに参加します。暇の時、幾何学とゲーム開発を勉強するようにします。" }, // GOZDEN GECIR: kisisel metin, ton sana ait. "(Erü)" acildi.

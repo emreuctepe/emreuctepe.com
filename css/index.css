@@ -1,5 +1,7 @@
-/* Font, index.html <head>'inde <link rel="preconnect"> + display=swap ile yukleniyor
-   (eskiden buradaki render-blocking @import ile geliyordu ve FOIT'e yol aciyordu). */
+/* Font tanimlari css/fonts.css'te, dosyalar fonts/ klasorunde - Google CDN'e
+   istek gitmiyor. index.html bu iki stil dosyasini ayri <link>'lerle cekiyor;
+   buradan @import edilmiyor cunku @import render-blocking'tir ve FOIT'e yol
+   acar (fontun eski durumu da tam olarak bu sebeple degistirilmisti). */
 
 * {
   margin: 0;
@@ -151,6 +153,22 @@ header {
 
 #lang-switcher a.active {
   color: white;
+}
+
+/* Gizlilik linki. #lang-switcher ile ayni palet - tek farki daha kucuk punto,
+   cunku gezinti degil zorunlu bir dipnot. */
+#site-legal {
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+#site-legal a {
+  color: #6d6f73;
+  text-decoration: none;
+}
+
+#site-legal a:hover {
+  color: #adb0b6;
 }
 
 #content {
@@ -374,5 +392,14 @@ a.more:hover .arrow {
   #lang-switcher a {
     display: inline-block;
     padding: 11px 8px;
+  }
+
+  #site-legal {
+    padding-top: 0;
+  }
+
+  #site-legal a {
+    display: inline-block;
+    padding: 11px 8px 11px 0;
   }
 }

@@ -44,7 +44,15 @@ olduğu için JS kapalıyken de doğru dilde açılırlar.
 Bir dil %90'dan az çevrildiyse atlanır (Türkçe metni "bu sayfa İngilizce" diye
 etiketlemek SEO'ya zarar verir). Yine de üretmek için `python3 build.py --force`.
 
-`en/` ve `ja/` klasörlerini elle düzenleme — her build'de üzerine yazılır.
+`en/` ve `ja/` klasörlerindeki **`index.html`**'i elle düzenleme — her build'de
+üzerine yazılır.
+
+Tek istisna `privacy.html`. Gizlilik metni üç dilde ayrı ayrı elle yazılıyor
+(`privacy.html`, `en/privacy.html`, `ja/privacy.html`); `build.py` yalnızca
+`{lang}/index.html` ürettiği için bu dosyalara dokunmaz. Hukuki metin uzun
+düzyazı, `lang/strings.js` ise kısa arayüz dizeleri için — ayrıca oradaki her
+satır yukarıdaki %90 eşiğinin paydasına giriyor. Metni değiştirirken üç dosyayı
+birlikte güncelle.
 
 ### Gizli karakter denetimi
 

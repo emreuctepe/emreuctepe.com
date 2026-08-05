@@ -17,10 +17,10 @@
   <link rel="alternate" hreflang="ja" href="https://emreuctepe.com/ja/">
   <link rel="alternate" hreflang="x-default" href="https://emreuctepe.com/">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap">
-
+  <!-- Font Google CDN'den degil, fonts/ klasorunden geliyor - bkz. css/fonts.css.
+       Kaldirilan <link rel="preconnect"> satirlari da bu yuzden gereksiz: artik
+       baglanilacak bir ucuncu taraf yok. -->
+  <link rel="stylesheet" href="../css/fonts.css">
   <link rel="stylesheet" href="../css/index.css">
   <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
 
@@ -61,6 +61,12 @@
         </div>
         <div id="lang-switcher">
           <a href="../" data-lang="tr">TR</a> · <a href="../en/" data-lang="en">EN</a> · <a href="../ja/" data-lang="ja">日本語</a>
+        </div>
+        <!-- #lang-switcher'in ICINE konmaz: js/i18n.js oradaki her <a> icin
+             localStorage'a data-lang degerini yaziyor, data-lang'siz bir link
+             oraya null yazardi. Kardes bir div olarak duruyor. -->
+        <div id="site-legal">
+          <a href="privacy.html" data-i18n="privacy_link">プライバシー</a>
         </div>
       </div>
     </header>
@@ -117,5 +123,19 @@
   <script defer src="../js/i18n.js"></script>
   <script defer src="../js/mv.js"></script>
   <script defer src="../js/profile-glitch.js"></script>
+
+  <!-- Cerezsiz sayac. Cihaza hicbir sey yazmaz - cerez de yok, localStorage da,
+       cache de. IP veritabanina islenmez; sadece ulke turetmek ve 8 saatlik
+       oturum hash'i uretmek icin anlik kullanilip atilir. Kalici ziyaretci
+       kimligi olmadigi icin ePrivacy m.5(3) hic devreye girmiyor: bu yuzden
+       cerez banner'i gerekmiyor. Dayanak mesru menfaat + privacy.html'deki
+       aydinlatma metni.
+       src'de GoatCounter'in verdigi protokol-goreli "//" degil tam "https://"
+       yaziyor: sayfa file:// uzerinden acilirsa "//" cozulemez, http uzerinden
+       acilirsa istek sifresiz gider.
+       GoatCounter localhost'u varsayilan olarak SAYMAZ - gelistirme sirasinda
+       panelde veri gorunmemesi normal, hata degil. -->
+  <script data-goatcounter="https://emreuctepe.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
