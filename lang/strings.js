@@ -1,85 +1,55 @@
 "use strict";
 
 // TEK CEVIRI DOSYASI - her satir bir metin, diller yan yana sutunlar halinde.
-//
-// Ceviri eklemek/duzeltmek icin SADECE bu dosyayi duzenle. Yeni bir dil eklemek
-// icin her satira yeni bir sutun ekle (ornegin de: "...") ve js/i18n.js icindeki
-// SUPPORTED listesine dil kodunu yaz - baska hicbir yere dokunmaya gerek yok.
-//
-// Bos string ("") = "henuz cevrilmedi" demek. O durumda i18n.js metne hic
-// dokunmaz, index.html'in govdesindeki Turkce metin oldugu gibi kalir. Yani
-// eksik ceviri siteyi bozmaz, sadece Turkce gorunur.
-//
-// DIKKAT: metin hedef dilde AYNI kalacaksa (ozel isimler, alan adlari, dizi/film
-// adlari) hucreyi bos birakma - Turkce metni birebir kopyala. Bos hucre build.py
-// icin "cevrilmedi" demektir ve %90 esigini asagi ceker; ~19 satir boyle oldugu
-// icin bos birakmak o dilin hic uretilememesine yol acar.
-//
-// tr sutunu index.html'deki metnin kopyasidir; ikisini birlikte guncelle
-// (HTML'deki metin JS kapaliyken/yuklenmeden once gorunen metindir).
+
 window.STRINGS = {
   // --- Sayfa meta bilgileri (<title>, description, og:*) ---
   page_title:       { tr: "Emre Üçtepe", en: "Emre Üçtepe", ja: "ヱムレ・ウチュテペ" },
-  page_desc:        { tr: "Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.", en: "Emre Üçtepe's personal site — projects, writing and contact.", ja: "" },
+  page_desc:        { tr: "Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.", en: "Emre Üçtepe's personal site — projects, articles and contact.", ja: "ヱムレ・ウチュテペの個人サイト。プロジェクト、記事、連絡先。" },
 
   // --- Erisilebilirlik metinleri (aria-label) ---
-  profile_alt:      { tr: "Emre Üçtepe profil fotoğrafı", en: "Emre Üçtepe profile photo", ja: "" },
-  email_label:      { tr: "E-posta gönder", en: "Send an email", ja: "" },
+  profile_alt:      { tr: "Emre Üçtepe profil fotoğrafı", en: "Profile photo of Emre Üçtepe", ja: "ヱムレ・ウチュテペのプロフィール写真" },
+  email_label:      { tr: "E-posta gönder", en: "Send an email", ja: "メールを送る" },
+
+  // ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
   // --- Baslik alani ---
   name:             { tr: "Emre Üçtepe", en: "Emre Üçtepe", ja: "ヱムレ・ウチュテペ" },
   country:          { tr: "Türkiye", en: "Türkiye", ja: "トルコ" },
 
   // --- Hakkimda ---
-  about_title:      { tr: "Hakkımda", en: "About", ja: "" },
-  about_text:       { tr: "Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da matematik, geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: "Hi. I'm studying Japanese Language and Literature at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into maths, geometry, game programming and web apps.", ja: "" }, // GOZDEN GECIR: kisisel metin, ton sana ait. "(Erü)" acildi.
-  about_more:       { tr: "İletişime Geç", en: "Get in touch", ja: "" },
+  about_title:      { tr: "Hakkımda", en: "About Me", ja: "私について" },
+  about_text:       { tr: "Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: "Hi. I'm studying Japanese Language and Literature at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into geometry, game programming and web apps.", ja: "こんにちは、エルジェス大学で日本語と日本文学を勉強しています。時々、テレビ、映画、広告などのプロジェックトに参加します。暇の時、幾何学とゲーム開発を勉強するようにします。" }, // GOZDEN GECIR: kisisel metin, ton sana ait. "(Erü)" acildi.
+  about_more:       { tr: "İletişime Geç", en: "Get in touch", ja: "メールで​ご連絡" },
 
   // --- Projeler bolumu ---
-  work_title:       { tr: "Projeler", en: "Projects", ja: "" },
-  work_more:        { tr: "Diğer Projeler", en: "More projects", ja: "" },
-  work_past:        { tr: "--------------Geçmiş----------", en: "----------Past----------", ja: "----------過去----------" },
+  work_title:       { tr: "Projeler", en: "Projects", ja: "プロジェックト" },
+  work_more:        { tr: "Diğer Projeler", en: "More projects", ja: "その他のプロジェックト" },
+  work_past:        { tr: "--------------Geçmiş----------", en: "--------------Past----------", ja: "----------過去----------" },
 
   // Her projenin iki parcasi var: _desc = baslik, _meta = tireden sonraki aciklama.
   project_1_desc:   { tr: "Aylık Sosyal Dergi", en: "Monthly Social Magazine", ja: "毎月雑誌" },
-  project_1_meta:   { tr: "dergi.com", en: "dergi.com", ja: "" },
-  project_2_desc:   { tr: "Türkiye'yi tanıtmak bana mı kaldı kardeşim!", en: "Guess promoting Türkiye is down to me!", ja: "" }, // GOZDEN GECIR: deyimsel, birebir cevrilmiyor
+  project_1_meta:   { tr: "dergi.com", en: "dergi.com", ja: "dergi.com" },
+  project_2_desc:   { tr: "Sadece Japonca Pratik", en: "Just Testing My Japanese", ja: "日本語を練習するだけ" }, // GOZDEN GECIR: deyimsel, birebir cevrilmiyor
   project_2_meta:   { tr: "YouTube Podcast", en: "YouTube Podcast", ja: "ポットキャスト" },
   project_3_desc:   { tr: "Rastgele Konu Seç", en: "Pick a Random Topic", ja: "ランドムトピックを選ぶ" },
   project_3_meta:   { tr: "emreuctepe.github.io/random-topik/", en: "emreuctepe.github.io/random-topik/", ja: "emreuctepe.github.io/random-topik/" },
-  project_6_desc:   { tr: "Osman", en: "Osman", ja: "" },
-  project_6_meta:   { tr: "Diriliş: Ertuğrul Dizi S5/B1-B29", en: "Resurrection Ertugrul S5/E1-E29 (TV series)", ja: "" },
-  project_7_desc:   { tr: "Naci", en: "Naci", ja: "" },
-  project_7_meta:   { tr: "Başarmalısın film", en: "Başarmalısın (film)", ja: "映画" },
-  project_8_desc:   { tr: "Hakan", en: "Hakan", ja: "" },
-  project_8_meta:   { tr: "Hayat Dediğin: Sevginin Gücü", en: "Hayat Dediğin: Sevginin Gücü", ja: "映画" },
-  project_10_desc:  { tr: "Türk Hava Yolları", en: "Turkish Airlines", ja: "" },
-  project_10_meta:  { tr: "Reklam Filmi", en: "Commercial", ja: "" },
-  project_11_desc:  { tr: "Dettol", en: "Dettol", ja: "" },
-  project_11_meta:  { tr: "Reklam Filmi (Şu an BOYKOT!)", en: "Commercial (currently BOYCOTTED!)", ja: "" },
+  project_6_desc:   { tr: "Osman", en: "Osman", ja: "オスマン1世" },
+  project_6_meta:   { tr: "Diriliş: Ertuğrul Dizi", en: "Resurrection: Ertuğrul (TV series)", ja: "Resurrection Ertuğrul ???テレビドラマ???" },
+  project_7_desc:   { tr: "Naci", en: "Naci", ja: "Naci" },
+  project_7_meta:   { tr: "Başarmalısın film", en: "Başarmalısın (film)", ja: "Başarmalısın 映画" },
+  project_8_desc:   { tr: "Hakan", en: "Hakan", ja: "Hakan" },
+  project_8_meta:   { tr: "Hayat Dediğin: Sevginin Gücü", en: "Hayat Dediğin: Sevginin Gücü (film)", ja: "Hayat Dediğin: Sevginin Gücü 映画" },
+  project_10_desc:  { tr: "Türk Hava Yolları", en: "Turkish Airlines", ja: "ターキッシュ エアラインズ" },
+  project_10_meta:  { tr: "Reklam Filmi", en: "Commercial", ja: "広告" },
+  project_11_desc:  { tr: "Dettol", en: "Dettol", ja: "Dettol（デトール）" },
+  project_11_meta:  { tr: "Reklam Filmi (Şu an BOYKOT!)", en: "Commercial (brand currently under BOYCOTT!)", ja: "広告(今ボイコットです!)" },
 
-  // Asagidakiler index.html'de su an yorum icinde - yorumu kaldirinca aktif olur.
-  project_4_desc:   { tr: "Project G", en: "Project G", ja: "" },
-  project_4_meta:   { tr: "İnteraktif Geometri Öğrenme platformu", en: "Interactive geometry learning platform", ja: "" },
-  project_5_desc:   { tr: "benkyoutorukogo.com", en: "benkyoutorukogo.com", ja: "" },
-  project_5_meta:   { tr: "Japonlar için Türkçe Öğrenme Materyalleri", en: "Turkish learning materials for Japanese speakers", ja: "" },
-  project_12_desc:  { tr: "Kayseray takip", en: "Kayseray tracker", ja: "" },
-  project_12_meta:  { tr: "proje203.com", en: "proje203.com", ja: "" },
-  project_13_desc:  { tr: "Historical Card Game", en: "Historical Card Game", ja: "" },
-  project_13_meta:  { tr: "proje203.com", en: "proje203.com", ja: "" },
-  project_14_desc:  { tr: "\"Good Chat\"", en: "\"Good Chat\"", ja: "" },
-  project_14_meta:  { tr: "proje203.com", en: "proje203.com", ja: "" },
-  project_15_desc:  { tr: "KargaManga Card Game", en: "KargaManga Card Game", ja: "" },
-  project_15_meta:  { tr: "proje203.com", en: "proje203.com", ja: "" },
-  project_16_desc:  { tr: "Damn! A lot", en: "Damn! A lot", ja: "" },
-  project_16_meta:  { tr: "proje203.com", en: "proje203.com", ja: "" },
 
   // --- Yazilar bolumu ---
-  articles_title:   { tr: "Yazılar", en: "Writing", ja: "" },
-  articles_more:    { tr: "Diğer Yazılar", en: "More writing", ja: "" },
-  // Yazilarin BASLIKLARI cevrilmiyor: baglanti hedefi tek dilde yayinlandi,
-  // basligi cevirmek okuyucuyu anlamadigi bir metne goturur. Ozgun baslik kalir.
-  article_1_title:  { tr: "大好きな図書館:IPA", en: "大好きな図書館:IPA", ja: "" },
-  article_2_title:  { tr: "Japon Modernleşmesine Farklı Bir Bakış", en: "Japon Modernleşmesine Farklı Bir Bakış", ja: "" },
+  articles_title:   { tr: "Yazılar", en: "Articles", ja: "記事" },
+  articles_more:    { tr: "Diğer Yazılar", en: "More articles", ja: "その他の記事" },
+  article_1_title:  { tr: "大好きな図書館:IPA", en: "大好きな図書館:IPA", ja: "大好きな図書館:IPA" },
+  article_2_title:  { tr: "Japon Modernleşmesine Farklı Bir Bakış", en: "Japon Modernleşmesine Farklı Bir Bakış", ja: "Japon Modernleşmesine Farklı Bir Bakış" },
   article_3_title:  { tr: "Speaking Club Ideas", en: "Speaking Club Ideas", ja: "Speaking Club Ideas" },
 };
