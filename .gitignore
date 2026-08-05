@@ -2,3 +2,6 @@ __pycache__/
 
 # Yerel araç ayarları (Claude Code'un dev sunucusu tanımı dahil)
 .claude/
+
+# Yerel geliştirme notları (BLUEPRINT, TODO, ANIMATIONS) - yayina gitmez
+dont-Commit-Push/
