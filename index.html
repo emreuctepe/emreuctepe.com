@@ -39,7 +39,12 @@
         <h1 data-i18n="name">Emre Üçtepe</h1>
         <p data-i18n="country">Türkiye</p>
         <div id="contact">
-          <a href="mailto:contact@emreuctepe.com" id="email" data-i18n-label="email_label" aria-label="E-posta gönder" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 42 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M3.025 5.255A1.99 1.99 0 0 1 4.003 5h33.994c.354 0 .688.093.977.256L21 18.5 3.025 5.255zm-1.002 1.45c-.015.098-.023.2-.023.302V18.28v-5.636 17.35C2 31.1 2.902 32 4.003 32h33.994A2.005 2.005 0 0 0 40 29.993v-17.35 5.638V7.008c0-.103-.008-.204-.023-.303L21 20.687 2.023 6.704z"/></svg></a>
+          <!-- mailto'da target="_blank" YOK: bu bir belge navigasyonu degil, isletim
+               sistemindeki posta uygulamasina devredilir. _blank verilince tarayici
+               yukleyecek belgesi olmayan bos bir sekme acip hemen kapatir (ya da
+               popup engelleyici bloklar) - kullaniciya "hicbir sey olmadi" gibi
+               gorunur. rel="noopener" de gereksiz: paylasilan bir window.opener yok. -->
+          <a href="mailto:contact@emreuctepe.com" id="email" data-i18n-label="email_label" aria-label="E-posta gönder"><svg viewBox="0 0 42 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M3.025 5.255A1.99 1.99 0 0 1 4.003 5h33.994c.354 0 .688.093.977.256L21 18.5 3.025 5.255zm-1.002 1.45c-.015.098-.023.2-.023.302V18.28v-5.636 17.35C2 31.1 2.902 32 4.003 32h33.994A2.005 2.005 0 0 0 40 29.993v-17.35 5.638V7.008c0-.103-.008-.204-.023-.303L21 20.687 2.023 6.704z"/></svg></a>
 
           <a href="https://github.com/emreuctepe" id="github" aria-label="GitHub" rel="noopener noreferrer" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 36" aria-hidden="true" focusable="false">
@@ -63,7 +68,8 @@
       <section id="about">
         <h2 data-i18n="about_title">Hakkımda</h2>
         <p data-i18n="about_text">Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da matematik, geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.  </p>
-        <a href="mailto:contact@emreuctepe.com" class="more" target="_blank" rel="noopener noreferrer">
+        <!-- target="_blank" yok - gerekcesi yukaridaki #email baglantisinda. -->
+        <a href="mailto:contact@emreuctepe.com" class="more">
           <span data-i18n="about_more">İletişime Geç</span>
           <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg>
         </a>
@@ -75,7 +81,7 @@
           <li><a href="#" target="_blank" rel="noopener noreferrer"><span data-i18n="project_2_desc">Türkiye'yi tanıtmak bana mı kaldı kardeşim!</span> - <span data-i18n="project_2_meta">YouTube Podcast</span></a></li>
           <li><a href="https://emreuctepe.github.io/random-topik/" target="_blank" rel="noopener noreferrer"><span data-i18n="project_3_desc">Rastgele Konu Seç</span> - <span data-i18n="project_3_meta">emreuctepe.github.io/random-topik/</span></a></li>
           <li><a target="_blank" rel="noopener noreferrer"><span data-i18n="work_past">--------------Geçmiş----------</span>-----</a></li>
-          <li><a href="https://www.imdb.com/title/tt8827156/?ref_=tt_epspo_ep_1" target="_blank" rel="noopener noreferrer"><span data-i18n="project_6_desc">Osman</span> - <span data-i18n="project_6_meta">Diriliş: Ertuğrul Dizi</span></a></li>
+          <li><a href="https://www.imdb.com/title/tt8827156/?ref_=tt_epspo_ep_1" target="_blank" rel="noopener noreferrer"><span data-i18n="project_6_desc">Osman</span> - <span data-i18n="project_6_meta">Diriliş: Ertuğrul Dizi S5/B1-B29</span></a></li>
           <li><a href="https://www.youtube.com/watch?v=KBHKbZ3uY08" target="_blank" rel="noopener noreferrer"><span data-i18n="project_7_desc">Naci</span> - <span data-i18n="project_7_meta">Başarmalısın film</span></a></li>
           <li><a href="https://www.youtube.com/watch?v=_SRxvWY0Qe0" target="_blank" rel="noopener noreferrer"><span data-i18n="project_8_desc">Hakan</span> - <span data-i18n="project_8_meta">Hayat Dediğin: Sevginin Gücü</span></a></li>
           <li><a href="#" target="_blank" rel="noopener noreferrer"><span data-i18n="project_10_desc">Türk Hava Yolları</span> - <span data-i18n="project_10_meta">Reklam Filmi</span></a></li>

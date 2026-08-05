@@ -167,6 +167,7 @@ gerekir.
 
 - [ ] `og:image` yok — sosyal paylaşımda önizleme görseli çıkmıyor. `images/avatar-240.webp` kullanılabilir (OG için 1200×630 daha uygun)
 - [ ] `index.html:113` ve `js/color.js:4`'teki tinycolor notları tarihî açıklama; dosya silindi, notlar kalabilir
+- [ ] yorum satırlarını kaldır. detaylı manuel hazırla.
 
 ---
 
