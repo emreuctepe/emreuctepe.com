@@ -23,16 +23,9 @@ import sys
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SOURCE_LANG = "tr"
 SITE = "https://emreuctepe.com"
-# Bir dili uretmek icin gereken en dusuk ceviri orani. Bunun altinda uretilen
-# sayfa Turkce metni "bu sayfa Ingilizce" diye etiketler - SEO icin zararli.
 MIN_COVERAGE = 0.90
 
 
-# Kodun ICINDE bulunmasi neredeyse her zaman kaza olan, gozle ayirt edilemeyen
-# karakterler. En sik kaynagi: Japonca IME acikken kod yazmak - hiragana modunda
-# bosluk tusu ASCII bosluk degil, tam genislikli bosluk (U+3000) uretir.
-# <h1　data-i18n="name"> gibi bir satir tarayicida sessizce bozulur: HTML etiket
-# adini yalnizca ASCII bosluk bitirdigi icin element "h1" olmaktan cikar.
 INVISIBLE = {
     "　": "U+3000 tam genislikli bosluk (Japonca IME)",
     " ": "U+00A0 kirilmaz bosluk",
@@ -59,10 +52,8 @@ def check_invisible(path):
     text = open(path, encoding="utf-8").read()
 
     if path.endswith(".html"):
-        # Etiket disindaki her seyi (yani gorunur metni) sil, geriye etiketler kalsin.
         scope = _blank_out(text, r">[^<]*(?=<|$)")
     else:
-        # Once yorumlar, sonra string literalleri temizlenir.
         scope = _blank_out(text, r"//[^\n]*|#[^\n]*")
         scope = _blank_out(scope, r'"""(?:[^"\\]|\\.|"(?!""))*"""')
         scope = _blank_out(scope, r'"(?:[^"\\\n]|\\.)*"' r"|'(?:[^'\\\n]|\\.)*'" r"|`(?:[^`\\]|\\.)*`")
@@ -122,7 +113,6 @@ def translate(page, table, lang):
         value = row.get(lang)
         return m.group("open") + H.escape(value, quote=False) + m.group("close") if value else m.group(0)
 
-    # <tag ... data-i18n="key" ...>METIN</tag> - icerigi duz metin olan elemanlar.
     page = re.sub(
         r'(?P<open><(?P<tag>\w+)[^>]*\sdata-i18n="(?P<key>[^"]+)"[^>]*>)'
         r"(?P<body>[^<]*)"
@@ -137,8 +127,6 @@ def translate(page, table, lang):
             value = row.get(lang)
             if not value:
                 return m.group(0)
-            # (?<![-\w]) olmadan "content" deseni "data-i18n-content"in kendisiyle
-            # eslesir ve key'in uzerine yazar.
             return re.sub(
                 r'(?<![-\w])%s="[^"]*"' % attr,
                 '%s="%s"' % (attr, H.escape(value, quote=True)),
@@ -155,16 +143,10 @@ def translate(page, table, lang):
 
 def localize_page(page, lang):
     """Yol, dil etiketi ve canonical gibi sayfa-disi ayarlari alt klasore uyarlar."""
-    # Metin artik HTML'e gomulu: i18n.js'e "tekrar cevirme, sadece switcher'i bagla" de.
     page = page.replace('<html lang="%s">' % SOURCE_LANG, '<html lang="%s" data-i18n-static>' % lang, 1)
 
-    # Sayfa bir alt klasore tasindi; koke goreli varlik yollari bir seviye yukari.
     page = re.sub(r'(\s(?:href|src)=")(css/|js/|images/|lang/)', r"\1../\2", page)
 
-    # Dil secici: koktekiler JS ile calisan href="#" baglantilari. Uretilen
-    # sayfalarda bunlari gercek yollara cevir - boylece JS'siz de calisirlar ve
-    # arama motoru diger dilleri takip edebilir. Turkce koke (..), digerleri
-    # kardes klasore (../en/) gider.
     def switcher(m):
         target = m.group(1)
         return 'href="%s" data-lang="%s"' % ("../" if target == SOURCE_LANG else "../%s/" % target, target)
@@ -223,8 +205,6 @@ def main():
         print("\nHicbir sayfa uretilmedi. Bu beklenen durum: lang/strings.js'deki "
               "en/ja sutunlari hala bos.")
 
-    # Gizli karakter bulunduysa build yine de yapilir (metin dogru cikar) ama
-    # cikis kodu 0 olmaz - ileride bir git hook'u ya da CI bunu yakalayabilsin.
     if problems:
         sys.exit(1)
 

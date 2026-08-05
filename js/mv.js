@@ -31,7 +31,6 @@ let logoContainer = document.querySelector('#logo-container');
 let windowWidth = document.body.clientWidth;
 let windowHeight = document.body.clientHeight;
 
-// animate stripes
 function _animateStripes(container, options={}) {
   options.count = options.count || 10;
   options.sizeRatio = options.sizeRatio || 1;
@@ -199,18 +198,6 @@ function cloneAndStripeElement(element, clipPathName, parent) {
 
   dynamics.css(el, {
     position: 'absolute',
-    // box.left/top zaten parent'a (getBoundingClientRect farkiyla) gore hesaplandi ve
-    // bu deger dogru dokuman koordinatidir; ayrica window.scroll eklemek kaydirma
-    // offset'ini CIFT sayar -> sayfa kaydirilmis haldeyken (overflow) hover klonlari
-    // scrollY kadar asagi kayardi. Intro'da scrollY=0 oldugu icin davranis degismez.
-    // +2 / -1: getBoundingClientRect ORIJINALIN border-box'ini verir ve orijinalde
-    // border YOK. Klona 1px'lik dekoratif border ekleniyor ve box-sizing border-box
-    // oldugundan, telafi edilmezse icerik kutusu her kenardan 1px daralir. O 2px,
-    // metnin tam sigdigi satiri tasirmaya yetiyor: son kelime alt satira duser, klonun
-    // 22px'lik kutusunun disinda kalir ve clip-path ile kirpilir -> hover glitch'inde
-    // linkin SONU kayboluyordu (16 linkin 7'si). 2px buyutup 1px geri kaydirinca
-    // icerik+padding alani orijinalin border-box'i ile birebir ortusur, border ise
-    // tam onun disina cizilir.
     left: Math.round(box.left) - 1,
     top: Math.round(box.top) - 1,
     width: Math.ceil(box.width) + 2,
@@ -222,13 +209,6 @@ function cloneAndStripeElement(element, clipPathName, parent) {
     fontFamily: style.fontFamily,
     color: style.color,
     textDecoration: style.textDecoration,
-    // Klon document.body'ye tasindigi icin ata gerektiren secicilerden (or.
-    // "#work ul li a") DUSER; padding'i miras alamaz, metni kutunun tepesine
-    // yapisir ve glitch orijinalden padding-top kadar yukarida cikardi.
-    // (a.more sinif tabanli oldugu icin bu dertten etkilenmiyordu.)
-    // width/height getBoundingClientRect'ten, yani border-box olcusu geliyor;
-    // padding'i geri verirken box-sizing'i de ona gore ayarliyoruz ki 1px
-    // border ve padding kutuyu buyutmesin.
     boxSizing: 'border-box',
     padding: style.padding,
     border: `1px solid ${borderColor}`,
@@ -317,21 +297,15 @@ function showContent() {
 let prefersReducedMotion = window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// intro
 (function() {
-  // Yukleme ekranini burada birakiyoruz: bu satira gelindiyse defer'li scriptlerin
-  // hepsi indi ve intro baslamak uzere. Once soluklastir (CSS gecisi), sonra DOM'dan
-  // cikar - boylece yukleme cizgisi glitch'in uzerine capraz gecisle devrediyor.
   let loaderEl = document.querySelector('#loader');
   if (loaderEl) {
     loaderEl.classList.add('is-loaded');
     setTimeout(function() {
       if (loaderEl.parentNode) loaderEl.parentNode.removeChild(loaderEl);
-    }, 300); // CSS'teki 250ms gecis + pay
+    }, 300);
   }
 
-  // Hareket hassasiyeti olan kullanicilar icin: agir serit/logo animasyonunu
-  // tamamen atla, icerigi dogrudan goster ve intro katmanini kaldir.
   if (prefersReducedMotion) {
     for (let i = 0; i < originalContentEls.length; i++) {
       originalContentEls[i].style.visibility = 'visible';
@@ -435,7 +409,6 @@ let prefersReducedMotion = window.matchMedia &&
   }, 3000);
 })();
 
-// page
 (function() {
   let linkEls = document.querySelectorAll('a');
   let isHoverAnimating = false;
@@ -464,9 +437,6 @@ let prefersReducedMotion = window.matchMedia &&
     let animating = true;
 
     let animate = function() {
-      // box her donguste yeniden okunur: link (or. "Diger Projeler" acilis kaymasi
-      // sirasinda) hareket ediyorsa glitch klonlari onu takip etsin. Duragan
-      // linklerde (normal hover) box degismez, davranis aynidir.
       let box = el.getBoundingClientRect();
       let masks = createMasksWithStripes(3, box, 3);
       let clonedEls = [];
@@ -535,15 +505,6 @@ let prefersReducedMotion = window.matchMedia &&
     }
   }
 
-  // sayfa acilinca tum linkleri sirayla "tanit": her linkin kendi rengini
-  // (ve varsa svg path fill'ini) degistirip geri aliyoruz. Native setTimeout
-  // kullaniliyor, dynamics.setTimeout'un gorunurluk bagimliligindan etkilenmesin diye.
-  // Not: yukaridaki linkEls sayfa yuklenirken yakalandigi icin intro'nun gecici
-  // klonlarini da iceriyordu; burada cagri aninda CANLI linkler sorgulaniyor (o an
-  // klonlar temizlenmis) - boylece sadece gercek 16 link boyanir ve tur suresi dogru.
-  // Sadece GORUNUR linkler: gizli .extra proje linkleri (acilmadan display:none) ve
-  // gizlenmis "Diger Projeler" butonu tura dahil OLMASIN - yoksa tur onlara ugrarken
-  // gorunmeyen bir "olu zaman" bosluk olusur. display:none zincirinde offsetParent null olur.
   function visibleLinks() {
     return Array.prototype.slice.call(document.querySelectorAll('a')).filter(function(el) {
       return el.offsetParent !== null;
@@ -568,14 +529,10 @@ let prefersReducedMotion = window.matchMedia &&
       }, i * 50);
     });
   }
-  // Hareket azaltma tercihinde otomatik "tanitim" turunu ve tekrarini atla.
   if (!prefersReducedMotion) {
     setTimeout(function startTours() {
       demoAllLinksOnce();
 
-      // Turun toplam suresi link sayisina + link basina gecikmeye bagli. Sabit/kisa
-      // aralik olursa turlar ust uste biner - o yuzden tekrar araligi, ILK tur sonrasi
-      // (klonlar temizlenmisken) gercek link sayisina gore hesaplaniyor.
       let tourMs = visibleLinks().length * 100 + 200;
       let pauseMs = 15000;
       setInterval(function() {
@@ -586,26 +543,10 @@ let prefersReducedMotion = window.matchMedia &&
     }, 2800);
   }
 
-  // Masaustu dikey duzen (mobil <=800px bunlarin disinda, CSS'e birakilir):
-  //  - VARSAYILAN (duruş + intro): dikey ORTALI. body align-items:center (CSS),
-  //    header hucrede ortali + sticky. Intro'nun glitch klonlari #page'e gore
-  //    konumlandigindan, bu asamada #page'e margin VERMIYORUZ -> klonlar bozulmaz.
-  //  - Proje listesi ACILINCA (projectsExpanded=true): top-anchor'a gecilir -> body
-  //    flex-start, header align-self:start, #page marginTop = (viewport - kapaliYuk)/2.
-  //    Boylece icerik sadece ASAGI buyur, ust konum donuk kalir, header KIMILDAMAZ.
-  //    Intro coktan bittigi icin klon koordinatlarini etkilemez.
   let pageHeaderEl = document.querySelector('#page > header');
   let workEl = document.querySelector('#work');
   let projectsExpanded = false;
 
-  // #page yuksekligini liste HALA KAPALIYMIS gibi olcer (top-anchor referansi).
-  // 'is-expanded' kalkinca CSS hem ekstra satirlari gizler hem "Diger Projeler"i geri
-  // getirir -> kapali duzen birebir kurulur. Hide/measure/restore TEK senkron is parcasi:
-  // arada boyama olmaz, hicbir timer/rAF geri cagrimi gizli durumu goremez. (Bu sonuncusu
-  // onemli: animateLink her karede getBoundingClientRect okuyor; display:none bir agacta
-  // sifir doner ve glitch klonlari yanlis yere giderdi.)
-  // HER cagrida yeniden olculur: #page padding'i 10vh 10vw oldugundan kapali yukseklik
-  // viewport'un IKI boyutuna da bagli - tek seferlik onbellek bayatlar (bkz. resize).
   function measureCollapsedPageHeight() {
     if (!workEl || !pageEl) return 0;
     var was = workEl.classList.contains('is-expanded');
@@ -617,8 +558,6 @@ let prefersReducedMotion = window.matchMedia &&
 
   function placeLayout() {
     if (!pageHeaderEl || !pageEl) return;
-    // Varsayilan (duruş/intro) ve mobil: HICBIR inline duzen yok -> CSS'e birak.
-    // Boylece intro glitch klonlari dogru konumlanir (sticky/margin mudahalesi yok).
     if (!projectsExpanded || window.innerWidth <= 800) {
       document.body.style.alignItems = '';
       pageEl.style.marginTop = '';
@@ -627,25 +566,13 @@ let prefersReducedMotion = window.matchMedia &&
       pageHeaderEl.style.top = '';
       return;
     }
-    // Proje listesi acildiktan sonra (masaustu): top-anchor + header dikey ORTADA sticky.
-    // #page marginTop, o anki viewport'ta KAPALI olsaydi ne kadar olacagina gore -> icerik
-    // asagi buyur, ust sabit. Deger onbelleklenmez, her cagride yeniden olculur.
-    // header align-self:start (icerik buyurken kimildamaz) + sticky merkez top'a klipsler.
     document.body.style.alignItems = 'flex-start';
     pageEl.style.marginTop = Math.max(0, Math.round((window.innerHeight - measureCollapsedPageHeight()) / 2)) + 'px';
     pageHeaderEl.style.position = 'sticky';
-    // DIKKAT: alignSelf YAZIMI, offsetHeight OKUMASINDAN once gelmeli - sirayi bozup
-    // "once okumalar, sonra yazmalar" diye toplama. Ilk cagride header hala gerilmis bir
-    // grid ogesi oldugundan satir yuksekligini (470) okur, kendi yuksekligini (270) degil
-    // -> sticky top 100px yanlis cikar.
     pageHeaderEl.style.alignSelf = 'start';
     pageHeaderEl.style.top = Math.max(0, Math.round((window.innerHeight - pageHeaderEl.offsetHeight) / 2)) + 'px';
   }
 
-  // Olcum artik her placeLayout'ta zorlanmis bir reflow; resize ise sik atesleniyor
-  // (pencere surukleme, tarayici zoom'u). Throttle YALNIZ dinleyicide: acilis yolundaki
-  // cagri (bkz. expandProjects) senkron kalmali, bir kare ertelemek top-anchor'in
-  // onlemek icin var oldugu sicramayi tam bir kare boyunca boyatirdi.
   let layoutRaf = 0;
   function schedulePlaceLayout() {
     if (layoutRaf) return;
@@ -658,66 +585,49 @@ let prefersReducedMotion = window.matchMedia &&
     document.fonts.ready.then(placeLayout);
   }
 
-  // --- "Diger Projeler" / "Projeler" basligi: tek kullanimlik, animasyonlu acilir liste ---
-  // Iki tetikleyici de ayni isi yapar: gizli duran ekstra proje satirlarini sirayla,
-  // hedefin biraz saginda baslayip ease ile sola kayarak ekler. Her satir kayarken o
-  // linkte glitch efekti (animateLink) acik kalir, yerlesince durur ("typewriter" hissi).
-  // Ekstra linklerin hover dinleyicileri zaten yukleme aninda linkEls uzerinden bagli
-  // (satir gizli olsa da DOM'da), o yuzden burada tekrar baglamiyoruz.
   (function setupProjectExpand() {
     let work = workEl;
     if (!work) return;
     let moreBtn = work.querySelector('a.more');
     let heading = work.querySelector('h2');
-    // Ilk 3 li varsayilan gorunur (CSS nth-child ile), 4. ve sonrasi "extra" - sirayla
-    // acilacaklar. HTML'de li sirasi degistikce otomatik ayarlanir; elle sinif yok.
     let extras = Array.prototype.slice.call(work.querySelectorAll('ul > li')).slice(3);
     let opened = false;
 
-    const OFFSET = 28;   // baslangicta hedefin bu kadar sagi (px)
-    const STAGGER = 70;  // satirlar arasi gecikme (orijinalin 4x hizlisi)
-    const SLIDE = 130;   // her satirin kayma suresi (orijinalin 4x hizlisi)
+    const OFFSET = 28;
+    const STAGGER = 70;
+    const SLIDE = 130;
 
     function expandProjects(instant) {
       if (opened) return;
       opened = true;
-      window.__projectsExpanded = true; // dil degisiminde acik kalabilmesi icin (bkz. i18n.js)
+      window.__projectsExpanded = true;
 
-      // Layout'u top-anchor'a gecir: SATIRLAR EKLENMEDEN ONCE, #page'i mevcut (ortali)
-      // konumunda dondur. Boylece icerik sadece ASAGI buyur ve header kimildamaz.
-      // (Intro coktan bitti; glitch klon koordinati etkilenmez.)
       if (!projectsExpanded) {
         projectsExpanded = true;
         placeLayout();
       }
 
-      // Acik duruma gec: CSS 'is-in' alan satirlari gosterir, "Diger Projeler"i gizler.
-      // Tek sinif oldugu icin measureCollapsedPageHeight bunu bir an geri alabiliyor.
       work.classList.add('is-expanded');
-      // butonu inaktif de et (tek kullanimlik)
       if (moreBtn) {
         moreBtn.setAttribute('aria-hidden', 'true');
         moreBtn.tabIndex = -1;
       }
-      // basligin tetikleyici rolunu de kaldir
       if (heading) {
         heading.removeAttribute('role');
         heading.removeAttribute('tabindex');
       }
 
-      // Giris glitch'leri tek tek durmaz; her eklenen link, TUM linkler eklenene kadar
-      // glitch'lemeye devam eder, sonra hepsi birlikte durur.
       let handles = [];
       extras.forEach(function(li, i) {
         let a = li.querySelector('a');
         if (instant || prefersReducedMotion) {
-          li.classList.add('is-in'); // aninda goster (hareket azaltma)
+          li.classList.add('is-in');
           return;
         }
         setTimeout(function() {
-          li.classList.add('is-in'); // nth-child(n+4) gizlemesini gecersiz kil -> gorunur
+          li.classList.add('is-in');
           dynamics.css(li, { translateX: OFFSET });
-          let r = a ? animateLink(a) : null; // giris sirasinda glitch acik
+          let r = a ? animateLink(a) : null;
           if (r) handles.push(r);
           dynamics.animate(li, { translateX: 0 }, {
             type: dynamics.easeOut,
@@ -726,8 +636,6 @@ let prefersReducedMotion = window.matchMedia &&
         }, i * STAGGER);
       });
 
-      // Son link eklenip kaymasi bitince tum giris glitch'lerini birlikte durdur.
-      // (Hover'da yine normal sekilde calismaya devam ederler.)
       if (!instant && !prefersReducedMotion) {
         let totalMs = (extras.length - 1) * STAGGER + SLIDE;
         setTimeout(function() {
@@ -743,8 +651,6 @@ let prefersReducedMotion = window.matchMedia &&
       });
     }
     if (heading) {
-      // Dikkat: dogrudan expandProjects BAGLANAMAZ - MouseEvent 'instant' parametresine
-      // gecer ve acilis animasyonu tamamen atlanirdi (Enter/Space ise animasyonlu acardi).
       heading.addEventListener('click', function() { expandProjects(); });
       heading.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -754,26 +660,19 @@ let prefersReducedMotion = window.matchMedia &&
       });
     }
 
-    // Dil degisiminde acik kalma: dil degistirici sayfayi yeniliyor (bkz. i18n.js).
-    // Yenileme oncesi projeler ACIKSA sessionStorage'a tek-kullanimlik bayrak konur;
-    // burada okuyup butona suni bir tiklama gonderiyoruz -> mevcut click handler'i
-    // (expandProjects, kendi animasyonuyla birlikte) normal sekilde calisir. Bayrak
-    // hemen tuketildigi icin sonraki manuel F5'te acilmaz (kullanicinin istedigi davranis).
-    // Intro bittiginde (#intro DOM'dan kalkinca -> glitch klonlari temizlenmis olur)
-    // tikliyoruz ki top-anchor margin'i intro klonlarini bozmasin.
     var shouldRestore = false;
     try { shouldRestore = sessionStorage.getItem('keepProjects') === '1'; } catch (_) {}
     if (shouldRestore) {
       try { sessionStorage.removeItem('keepProjects'); } catch (_) {}
-      var doRestore = function () { if (moreBtn) moreBtn.click(); }; // opened guard -> tek sefer
+      var doRestore = function () { if (moreBtn) moreBtn.click(); };
       if (!document.getElementById('intro')) {
-        doRestore(); // intro yok (or. reduced-motion): hemen tikla
+        doRestore();
       } else {
         var obs = new MutationObserver(function () {
           if (!document.getElementById('intro')) { obs.disconnect(); doRestore(); }
         });
         obs.observe(document.body, { childList: true });
-        setTimeout(function () { obs.disconnect(); doRestore(); }, 4000); // yedek: intro takilirsa
+        setTimeout(function () { obs.disconnect(); doRestore(); }, 4000);
       }
     }
   })();

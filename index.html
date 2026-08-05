@@ -17,15 +17,10 @@
   <link rel="alternate" hreflang="ja" href="https://emreuctepe.com/ja/">
   <link rel="alternate" hreflang="x-default" href="https://emreuctepe.com/">
 
-  <!-- Font Google CDN'den degil, fonts/ klasorunden geliyor - bkz. css/fonts.css.
-       Kaldirilan <link rel="preconnect"> satirlari da bu yuzden gereksiz: artik
-       baglanilacak bir ucuncu taraf yok. -->
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/index.css">
   <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 
-  <!-- Yukleme ekranini mv.js kaldiriyor; JS kapaliysa hic gosterme (yoksa
-       sayfayi kalici olarak orterdi - site JS'siz de calismali). -->
   <noscript><style>#loader { display: none; }</style></noscript>
 </head>
 <body>
@@ -39,11 +34,6 @@
         <h1 data-i18n="name">Emre Üçtepe</h1>
         <p data-i18n="country">Türkiye</p>
         <div id="contact">
-          <!-- mailto'da target="_blank" YOK: bu bir belge navigasyonu degil, isletim
-               sistemindeki posta uygulamasina devredilir. _blank verilince tarayici
-               yukleyecek belgesi olmayan bos bir sekme acip hemen kapatir (ya da
-               popup engelleyici bloklar) - kullaniciya "hicbir sey olmadi" gibi
-               gorunur. rel="noopener" de gereksiz: paylasilan bir window.opener yok. -->
           <a href="mailto:contact@emreuctepe.com" id="email" data-i18n-label="email_label" aria-label="E-posta gönder"><svg viewBox="0 0 42 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M3.025 5.255A1.99 1.99 0 0 1 4.003 5h33.994c.354 0 .688.093.977.256L21 18.5 3.025 5.255zm-1.002 1.45c-.015.098-.023.2-.023.302V18.28v-5.636 17.35C2 31.1 2.902 32 4.003 32h33.994A2.005 2.005 0 0 0 40 29.993v-17.35 5.638V7.008c0-.103-.008-.204-.023-.303L21 20.687 2.023 6.704z"/></svg></a>
 
           <a href="https://github.com/emreuctepe" id="github" aria-label="GitHub" rel="noopener noreferrer" target="_blank">
@@ -62,9 +52,6 @@
         <div id="lang-switcher">
           <a href="#" data-lang="tr">TR</a> · <a href="#" data-lang="en">EN</a> · <a href="#" data-lang="ja">日本語</a>
         </div>
-        <!-- #lang-switcher'in ICINE konmaz: js/i18n.js oradaki her <a> icin
-             localStorage'a data-lang degerini yaziyor, data-lang'siz bir link
-             oraya null yazardi. Kardes bir div olarak duruyor. -->
         <div id="site-legal">
           <a href="privacy.html" data-i18n="privacy_link">Gizlilik</a>
         </div>
@@ -103,6 +90,7 @@
           <li><a href="https://medium.com/@muhammedemreuctepe/speaking-club-ideas-e4d9cf6a7c7c" target="_blank" rel="noopener noreferrer"><span data-i18n="article_3_title">Speaking Club Ideas</span></a></li>
         </ul>
         <a href="https://medium.com/@muhammedemreuctepe" class="more" target="_blank" rel="noopener noreferrer"><span data-i18n="articles_more">Diğer Yazılar</span> <svg class="arrow" viewBox="0 0 6 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L6,5 L0,10 Z"/></svg></a>
+
       </section>
     </main>
   </div>
@@ -110,12 +98,7 @@
     <div id="logo-container" class="full-size"></div>
     <svg id="stripes" class="full-size" width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
   </div>
-  <!-- #intro'dan SONRA gelir ki (z-index yok, DOM sirasi karar verir) intro
-       hazirlanirken onun ustunde dursun. Bicimi css/index.css'te. -->
   <div id="loader" class="full-size" aria-hidden="true"><span></span></div>
-  <!-- Not: p5.js (~950KB) ve tinycolor (35KB) kaldirildi; glitch efekti saf Canvas 2D
-       ile, renk uretimi ise js/color.js yardimcisi ile yapiliyor. defer sirasi korunur:
-       color.js -> random-link-color/mv; dynamics -> mv; lang/strings -> i18n -> mv. -->
   <script defer src="js/color.js"></script>
   <script defer src="js/dynamics.js"></script>
   <script defer src="js/random-link-color.js"></script>
@@ -124,17 +107,6 @@
   <script defer src="js/mv.js"></script>
   <script defer src="js/profile-glitch.js"></script>
 
-  <!-- Cerezsiz sayac. Cihaza hicbir sey yazmaz - cerez de yok, localStorage da,
-       cache de. IP veritabanina islenmez; sadece ulke turetmek ve 8 saatlik
-       oturum hash'i uretmek icin anlik kullanilip atilir. Kalici ziyaretci
-       kimligi olmadigi icin ePrivacy m.5(3) hic devreye girmiyor: bu yuzden
-       cerez banner'i gerekmiyor. Dayanak mesru menfaat + privacy.html'deki
-       aydinlatma metni.
-       src'de GoatCounter'in verdigi protokol-goreli "//" degil tam "https://"
-       yaziyor: sayfa file:// uzerinden acilirsa "//" cozulemez, http uzerinden
-       acilirsa istek sifresiz gider.
-       GoatCounter localhost'u varsayilan olarak SAYMAZ - gelistirme sirasinda
-       panelde veri gorunmemesi normal, hata degil. -->
   <script data-goatcounter="https://emreuctepe.goatcounter.com/count"
           async src="https://gc.zgo.at/count.js"></script>
 </body>

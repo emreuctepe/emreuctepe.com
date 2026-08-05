@@ -1,10 +1,3 @@
-/* Uzun duzyazi sayfalari (privacy.html ve dil surumleri) icin duzen.
-
-   Neden index.css degil: o dosya tek ekranlik, dikey ortali, animasyonlu bir
-   duzen icin yazilmis (body flex + align-items:center, #page/#intro/#loader
-   varsayimlari). Ekrandan uzun bir hukuki metni oraya koymak duzeni bozar.
-   Ortak olan tek sey palet ve font; font zaten css/fonts.css'ten geliyor. */
-
 * {
   margin: 0;
   padding: 0;
@@ -18,7 +11,6 @@ body {
   font-size: 17px;
   line-height: 1.65;
   -webkit-text-size-adjust: 100%;
-  /* Satir uzunlugu ~75 karakteri gecmesin - okunabilirlik esigi. */
   max-width: 42rem;
   margin: 0 auto;
   padding: 48px 20px 80px;
@@ -66,7 +58,6 @@ code {
   color: #adb0b6;
 }
 
-/* Japonca surumdeki "dis gonderim" (外部送信規律) tablosu. */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -86,7 +77,6 @@ th {
   font-weight: normal;
 }
 
-/* Guncelleme tarihi ve sayfa alti gezintisi. */
 .meta {
   font-size: 14px;
   color: #6d6f73;

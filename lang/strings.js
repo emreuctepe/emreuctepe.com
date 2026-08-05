@@ -1,41 +1,28 @@
 "use strict";
 
-// TEK CEVIRI DOSYASI - her satir bir metin, diller yan yana sutunlar halinde.
-
 window.STRINGS = {
-  // --- Sayfa meta bilgileri (<title>, description, og:*) ---
   page_title:       { tr: "Emre Üçtepe", en: "Emre Üçtepe", ja: "ヱムレ・ウチュテペ" },
   page_desc:        { tr: "Emre Üçtepe'nin kişisel sitesi — projeler, yazılar ve iletişim.", en: "Emre Üçtepe's personal site — projects, articles and contact.", ja: "ヱムレ・ウチュテペの個人サイト。プロジェクト、記事、連絡先。" },
 
-  // --- Erisilebilirlik metinleri (aria-label) ---
   profile_alt:      { tr: "Emre Üçtepe profil fotoğrafı", en: "Profile photo of Emre Üçtepe", ja: "ヱムレ・ウチュテペのプロフィール写真" },
   email_label:      { tr: "E-posta gönder", en: "Send an email", ja: "メールを送る" },
 
-  // ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
-
-  // --- Baslik alani ---
   name:             { tr: "Emre Üçtepe", en: "Emre Üçtepe", ja: "ヱムレ・ウチュテペ" },
   country:          { tr: "Türkiye", en: "Türkiye", ja: "トルコ" },
 
-  // Gizlilik sayfasi linki. Sayfanin KENDISI cevrilmis uc ayri dosya
-  // (privacy.html, en/privacy.html, ja/privacy.html) - build.py uretmiyor,
-  // elle yaziliyor. Burada sadece linkin gorunen metni duruyor.
   privacy_link:     { tr: "Gizlilik", en: "Privacy", ja: "プライバシー" },
 
-  // --- Hakkimda ---
   about_title:      { tr: "Hakkımda", en: "About Me", ja: "私について" },
-  about_text:       { tr: "Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: "Hi. I'm studying Japanese Language and Literature at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into geometry, game programming and web apps.", ja: "こんにちは、エルジェス大学で日本語と日本文学を勉強しています。時々、テレビ、映画、広告などのプロジェックトに参加します。暇の時、幾何学とゲーム開発を勉強するようにします。" }, // GOZDEN GECIR: kisisel metin, ton sana ait. "(Erü)" acildi.
+  about_text:       { tr: "Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: "Hi. I'm studying Japanese Language and Literature at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into geometry, game programming and web apps.", ja: "こんにちは、エルジェス大学で日本語と日本文学を勉強しています。時々、テレビ、映画、広告などのプロジェックトに参加します。暇の時、幾何学とゲーム開発を勉強するようにします。" },
   about_more:       { tr: "İletişime Geç", en: "Get in touch", ja: "メールで​ご連絡" },
 
-  // --- Projeler bolumu ---
   work_title:       { tr: "Projeler", en: "Projects", ja: "プロジェックト" },
   work_more:        { tr: "Diğer Projeler", en: "More projects", ja: "その他のプロジェックト" },
   work_past:        { tr: "--------------Geçmiş----------", en: "--------------Past----------", ja: "----------過去----------" },
 
-  // Her projenin iki parcasi var: _desc = baslik, _meta = tireden sonraki aciklama.
   project_1_desc:   { tr: "Aylık Sosyal Dergi", en: "Monthly Social Magazine", ja: "毎月雑誌" },
   project_1_meta:   { tr: "dergi.com", en: "dergi.com", ja: "dergi.com" },
-  project_2_desc:   { tr: "Sadece Japonca Pratik", en: "Just Testing My Japanese", ja: "日本語を練習するだけ" }, // GOZDEN GECIR: deyimsel, birebir cevrilmiyor
+  project_2_desc:   { tr: "Sadece Japonca Pratik", en: "Just Testing My Japanese", ja: "日本語を練習するだけ" },
   project_2_meta:   { tr: "YouTube Podcast", en: "YouTube Podcast", ja: "ポットキャスト" },
   project_3_desc:   { tr: "Rastgele Konu Seç", en: "Pick a Random Topic", ja: "ランドムトピックを選ぶ" },
   project_3_meta:   { tr: "emreuctepe.github.io/random-topik/", en: "emreuctepe.github.io/random-topik/", ja: "emreuctepe.github.io/random-topik/" },
@@ -51,7 +38,6 @@ window.STRINGS = {
   project_11_meta:  { tr: "Reklam Filmi (Şu an BOYKOT!)", en: "Commercial (brand currently under BOYCOTT!)", ja: "広告(今ボイコットです!)" },
 
 
-  // --- Yazilar bolumu ---
   articles_title:   { tr: "Yazılar", en: "Articles", ja: "記事" },
   articles_more:    { tr: "Diğer Yazılar", en: "More articles", ja: "その他の記事" },
   article_1_title:  { tr: "大好きな図書館:IPA", en: "大好きな図書館:IPA", ja: "大好きな図書館:IPA" },

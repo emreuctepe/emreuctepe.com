@@ -1,8 +1,3 @@
-/* Font tanimlari css/fonts.css'te, dosyalar fonts/ klasorunde - Google CDN'e
-   istek gitmiyor. index.html bu iki stil dosyasini ayri <link>'lerle cekiyor;
-   buradan @import edilmiyor cunku @import render-blocking'tir ve FOIT'e yol
-   acar (fontun eski durumu da tam olarak bu sebeple degistirilmisti). */
-
 * {
   margin: 0;
   padding: 0;
@@ -25,8 +20,6 @@ body {
   min-height: 100%;
   display: flex;
   justify-content: center;
-  /* Varsayilan: dikey ortali (intro ve duruş gorunumu icin). Proje listesi acilinca
-     js/mv.js bunu inline 'flex-start'a cevirir (top-anchor) ki icerik asagi buyusun. */
   align-items: center;
 }
 
@@ -70,9 +63,6 @@ header {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /* Duruş/intro halinde tamamen orijinal (mudahalesiz) - boylece intro glitch klonlari
-     dogru konumlanir. Proje listesi acilinca js/mv.js inline olarak sticky + align-self
-     + top + #page marginTop ekler (top-anchor, header sabit, icerik asagi buyur). */
 }
 
 #header-content {
@@ -115,8 +105,6 @@ header {
   cursor: pointer;
 }
 
-/* Medium/YouTube: viewBox artik ikonun gercek sinir kutusuna kirpilmis,
-   digerleri gibi yukseklik sabit (23.75px, %25 buyutulmus), genislik kendi oranina gore */
 #contact a#medium,
 #contact a#medium svg {
   width: 23.75px;
@@ -155,8 +143,6 @@ header {
   color: white;
 }
 
-/* Gizlilik linki. #lang-switcher ile ayni palet - tek farki daha kucuk punto,
-   cunku gezinti degil zorunlu bir dipnot. */
 #site-legal {
   padding-top: 10px;
   font-size: 12px;
@@ -196,26 +182,14 @@ section a:hover {
   color: #adb0b6;
 }
 
-/* Paragraf ici linkler (ör. "Hakkimda" metnindeki gibi) link oldugunu belli etsin
-   diye sayfa her yenilendiginde rastgele bir renk alir (bkz js/random-link-color.js).
-   Yeni bir kelimeyi link yapmak icin sadece <a> etiketine sarmak yeterli, baska
-   hicbir sey eklemeye gerek yok. */
 section p a {
   color: var(--inline-link-color, #8E9094);
 }
 
-/* Varsayilan: proje listesinin ILK 3 satiri gorunur; 4. ve sonrasi gizli durur.
-   "Diger Projeler" (veya "Projeler" basligi) tiklaninca js/mv.js bunlari sirayla
-   animasyonla acar. Boylece HTML'de li SIRASINI degistirmek yeterli - ilk 3 siteye
-   yansir, digerleri sonradan eklenir; elle .extra sinifi yonetmeye gerek yok. */
 #work ul li:nth-child(n+4) {
   display: none;
 }
 
-/* Liste acildiginda (js/mv.js '#work'a 'is-expanded' ekler): sirayla 'is-in' alan
-   satirlar gorunur, tek kullanimlik "Diger Projeler" butonu kalkar. Acilis/kapanis TEK
-   sinifla ifade edildigi icin mv.js top-anchor'i yeniden olcerken sinifi bir an kaldirip
-   KAPALI duzeni birebir geri kurabiliyor (bkz. measureCollapsedPageHeight). */
 #work.is-expanded ul li.is-in {
   display: list-item;
 }
@@ -249,11 +223,6 @@ a.more:hover .arrow {
   pointer-events: none;
 }
 
-/* Yukleme ekrani: defer'li scriptler (dynamics.js ~60KB) inerken sayfa bos-siyah
-   kalmasin diye. Saf CSS - ek istek yok, JS beklemez, ilk boyamada goruniyor.
-   mv.js intro'yu baslatirken .is-loaded ile soluklastirip DOM'dan kaldiriyor,
-   boylece yukleme cizgisinden glitch'e yumusak bir gecis oluyor.
-   JS kapaliysa <noscript> (index.html <head>) bu katmani hic gostermez. */
 #loader {
   background: #101214;
   display: flex;
@@ -261,7 +230,6 @@ a.more:hover .arrow {
   justify-content: center;
   pointer-events: none;
   transition: opacity 250ms linear;
-  /* Emniyet: mv.js bir sekilde calismazsa ekran sonsuza kadar kapali kalmasin. */
   animation: loader-timeout 1ms linear 8s forwards;
 }
 
@@ -269,20 +237,14 @@ a.more:hover .arrow {
   opacity: 0;
 }
 
-/* Intro'nun yatay serit motifine selam: ince bir raydaki tek parca gidip gelir. */
 #loader span {
   position: relative;
   width: 120px;
   height: 2px;
-  background: rgba(142, 144, 148, 0.2); /* #8E9094 */
+  background: rgba(142, 144, 148, 0.2);
   overflow: hidden;
 }
 
-/* Kayan parca sitenin vurgu renk uzayinda gezinir: js/color.js her yuklemede
-   hsl(rastgele, 80%, 65%) uretip glitch seritlerine, paragraf ici linklere ve
-   favicon'a veriyor. Burada ayni doygunluk/aciklikta hue'yu dondurerek o
-   paletin icinde kaliyoruz - ama JS'e dokunmadan, cunku loader'in tum amaci
-   scriptler inmeden once gorunmek. */
 #loader span::after {
   content: "";
   position: absolute;
@@ -290,8 +252,6 @@ a.more:hover .arrow {
   left: 0;
   width: 40px;
   height: 100%;
-  /* @property desteklenmeyen tarayicida animasyon islemez; bu satir sayesinde
-     degisken yine de cozulur ve parca sabit bir vurgu renginde kalir. */
   --loader-hue: 0;
   background: hsl(var(--loader-hue), 80%, 65%);
   animation:
@@ -299,8 +259,6 @@ a.more:hover .arrow {
     loader-hue 5s linear infinite;
 }
 
-/* Hue'yu <number> olarak kaydetmek gercek renk gecisi saglar; kaydedilmezse
-   tarayici degiskeni metin gibi gorup adim adim (veya hic) gecis yapardi. */
 @property --loader-hue {
   syntax: "<number>";
   inherits: false;
@@ -312,7 +270,7 @@ a.more:hover .arrow {
 }
 
 @keyframes loader-scan {
-  to { transform: translateX(80px); } /* ray 120px - parca 40px */
+  to { transform: translateX(80px); }
 }
 
 @keyframes loader-timeout {
@@ -323,7 +281,7 @@ a.more:hover .arrow {
   #loader span::after {
     animation: none;
     width: 100%;
-    background: #8E9094; /* renk donusu de hareket sayilir; notr ve sabit birak */
+    background: #8E9094;
     opacity: 0.35;
   }
 }
@@ -352,26 +310,12 @@ a.more:hover .arrow {
     grid-template-columns: 1fr;
     grid-auto-flow: row;
   }
-  /* Tek sutunlu mobil duzende sabitleme kapali (header icerigi ortmasin). */
   header {
     position: static;
   }
 }
 
-/* Dokunma hedefleri. Olcum (375px): liste linkleri 21.8px yuksekliginde ve
-   aralarinda 0.9px bosluk vardi - parmak ucu ayni anda 2-3 satiri kapatiyordu.
-   Dil secici 14.7x17.1px ile en kucugu. Hedefi gorunmez sekilde buyutmek
-   (pseudo-element hit alani) burada CARE DEGIL: bitisik satirlarda buyuyen
-   alanlar ust uste biner, belirsizlik yer degistirir sadece. O yuzden gercek
-   bosluk ekliyoruz ve satirlari ~44px'e (Apple HIG) cikariyoruz.
-
-   Sorgu max-width degil pointer:coarse: dert dokunmatikte, dar masaustu
-   penceresinde degil. Ayrica mv.js:515 hover glitch'ini 'ontouchstart' ile
-   zaten kapatiyor - ayni kitleyi hedefleyince glitch klonlarinin
-   getBoundingClientRect kutusu hicbir yerde padding'den etkilenmemis oluyor. */
 @media (pointer: coarse) {
-  /* Blok yapmak satiri bastan sona tiklanabilir kilar; dar metinlerde
-     ("Osman - ...") saga dogru isabetsiz dokunuslar da kurtulur. */
   #work ul li a,
   #articles ul li a {
     display: block;
@@ -383,8 +327,6 @@ a.more:hover .arrow {
     padding: 12px 0;
   }
 
-  /* Sayfanin en kucuk hedefleri. Ayiraclar ("·") yerinde kalsin diye
-     inline-block + yatay padding: TR/EN kutulari ~31x39px'e ciker. */
   #lang-switcher {
     padding-top: 12px;
   }

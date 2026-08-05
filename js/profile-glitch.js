@@ -1,25 +1,13 @@
 "use strict";
 
-// Profil "glitch" avatari.
-// Eskiden bu efekt p5.js (~950KB, CDN) ile yapiliyordu; artik hicbir bagimlilik
-// olmadan, saf Canvas 2D ile uretiliyor. Piksel manipulasyon mantigi (flowLine /
-// shiftLine / shiftRGB / scatter) eski surumle birebir ayni; sadece p5'in image /
-// pixels API'si yerine dogrudan ImageData/Uint8ClampedArray kullaniliyor.
-//
-// Ek olarak:
-//  - ~20fps'e sinirlandi (eski surum 60fps'te surekli piksel isliyordu),
-//  - canvas gorunmediginde / sekme gizlendiginde durur (IntersectionObserver +
-//    visibilitychange) -> arka planda bosuna CPU/pil yakmaz,
-//  - prefers-reduced-motion aciksa animasyon yerine tek statik kare gosterilir.
 (function () {
   const container = document.getElementById("profile-glitch-canvas");
   if (!container) return;
 
   const SIZE = 120;
-  const CH = 4; // RGBA
+  const CH = 4;
   const floor = Math.floor;
   const now = () => performance.now();
-  // p5.random uyumlulugu: random(max) -> [0,max), random(min,max) -> [min,max)
   const random = (a, b) => (b === undefined ? Math.random() * a : a + Math.random() * (b - a));
 
   const canvas = document.createElement("canvas");
@@ -28,8 +16,8 @@
   const ctx = canvas.getContext("2d");
   container.appendChild(canvas);
 
-  const frameID = ctx.createImageData(SIZE, SIZE); // her kare buraya yazilip ekrana basilir
-  const scratch = document.createElement("canvas"); // scatter parcalari / ilk olcekleme icin
+  const frameID = ctx.createImageData(SIZE, SIZE);
+  const scratch = document.createElement("canvas");
   const sctx = scratch.getContext("2d");
 
   function blit(buf) {
@@ -51,8 +39,8 @@
     constructor(pristine, w, h) {
       this.w = w;
       this.h = h;
-      this.origin = pristine; // pristine kopya (hic degismez)
-      this.buf = new Uint8ClampedArray(pristine); // her karede uzerinde calisilan tampon
+      this.origin = pristine;
+      this.buf = new Uint8ClampedArray(pristine);
       this.throughFlag = true;
       this.throughUntil = 0;
       this.flowLineImgs = [{
@@ -119,8 +107,6 @@
       for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
           const i = (y * w + x) * CH;
-          // Not: (i + randR) negatif olabilir; eski p5 surumu de bu durumda
-          // undefined -> 0 (siyah) davraniyordu, ayni sekilde birakildi.
           dest[i] = src[(i + randR) % len];
           dest[i + 1] = src[(i + 1 + randG) % len];
           dest[i + 2] = src[(i + 2 + randB) % len];
@@ -151,7 +137,6 @@
     }
 
     render() {
-      // her kare pristine kopyadan basla (eski: replaceData(imgOrigin, copyData))
       this.buf.set(this.origin);
 
       const n = floor(random(100));
@@ -163,7 +148,7 @@
         if (now() >= this.throughUntil) {
           this.throughFlag = true;
         } else {
-          blit(this.buf); // temiz (pristine) goruntu goster
+          blit(this.buf);
           return;
         }
       }
@@ -204,12 +189,11 @@
     }
   }
 
-  // --- animasyon dongusu (throttle + gorunurluk kontrolu) ---
   let glitch = null;
   let running = false;
   let rafId = null;
   let last = 0;
-  const FRAME_MS = 1000 / 20; // ~20fps
+  const FRAME_MS = 1000 / 20;
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function loop(t) {
@@ -230,8 +214,6 @@
     rafId = null;
   }
 
-  // Once optimize edilmis kucuk WebP denenir; yoksa mevcut JPEG'e duser.
-  // (avatar-240.webp henuz uretilmediyse site calismaya devam eder.)
   function loadFirstAvailable(sources, onload) {
     let idx = 0;
     const img = new Image();
@@ -244,8 +226,6 @@
   }
 
   loadFirstAvailable(["images/avatar-240.webp", "images/IMG_6924.jpeg"], (img) => {
-    // Telefon fotografi (2315x2315) resize edilmeden kullanilirsa her karede
-    // milyonlarca piksel islenir; 120px'e olcekleyip pristine pikselleri aliyoruz.
     scratch.width = SIZE;
     scratch.height = SIZE;
     sctx.clearRect(0, 0, SIZE, SIZE);
@@ -254,7 +234,7 @@
     glitch = new Glitch(new Uint8ClampedArray(pristine), SIZE, SIZE);
 
     if (reduce) {
-      blit(glitch.origin); // hareket azaltma: tek statik kare
+      blit(glitch.origin);
       return;
     }
 
