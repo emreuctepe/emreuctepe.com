@@ -345,3 +345,11 @@ a.more:hover .arrow {
     padding: 11px 8px 11px 0;
   }
 }
+
+.strike {
+  text-decoration: line-through;
+}
+
+#about p a.plain-link {
+  color: inherit;
+}

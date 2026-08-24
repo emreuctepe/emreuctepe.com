@@ -13,7 +13,9 @@ window.STRINGS = {
   privacy_link:     { tr: "Gizlilik", en: "Privacy", ja: "プライバシー" },
 
   about_title:      { tr: "Hakkımda", en: "About Me", ja: "私について" },
-  about_text:       { tr: "Selam, şu an Japon Dili ve Edebiyatı(Erü) okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: "Hi. I'm studying Japanese Language and Literature at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into geometry, game programming and web apps.", ja: "こんにちは、エルジェス大学で日本語と日本文学を勉強しています。時々、テレビ、映画、広告などのプロジェックトに参加します。暇の時、幾何学とゲーム開発を勉強するようにします。" },
+  about_text_1:     { tr: "Selam, şu an Erciyes'te ", en: "Hi. I'm studying ", ja: "こんにちは、エルジェス大学で" },
+  about_link:       { tr: "Japonoloji", en: "Japanology", ja: "日本学" },
+  about_text_2:     { tr: " okuyorum. Kendi halimde oyunculuğa devam ediyorum. Sıkıldığımda da geometri, oyun programlama ve web uygulamaları gibi alanlarda takılıyorum.", en: " at Erciyes University. I keep acting, in my own quiet way. And when I get bored I wander off into geometry, game programming and web apps.", ja: "を勉強しています。時々、テレビ、映画、広告などのプロジェックトに参加します。暇の時、幾何学とゲーム開発を勉強するようにします。" },
   about_more:       { tr: "İletişime Geç", en: "Get in touch", ja: "メールで​ご連絡" },
 
   work_title:       { tr: "Projeler", en: "Projects", ja: "プロジェックト" },
@@ -25,7 +27,7 @@ window.STRINGS = {
   project_2_desc:   { tr: "Sadece Japonca Pratik", en: "Just Testing My Japanese", ja: "日本語を練習するだけ" },
   project_2_meta:   { tr: "YouTube Podcast", en: "YouTube Podcast", ja: "ポットキャスト" },
   project_3_desc:   { tr: "Rastgele Konu Seç", en: "Pick a Random Topic", ja: "ランドムトピックを選ぶ" },
-  project_3_meta:   { tr: "emreuctepe.github.io/random-topik/", en: "emreuctepe.github.io/random-topik/", ja: "emreuctepe.github.io/random-topik/" },
+  project_3_meta:   { tr: "random-topik", en: "random-topik", ja: "random-topik" },
   project_6_desc:   { tr: "Osman", en: "Osman", ja: "オスマン1世" },
   project_6_meta:   { tr: "Diriliş: Ertuğrul Dizi", en: "Resurrection: Ertuğrul (TV series)", ja: "Resurrection Ertuğrul ???テレビドラマ???" },
   project_7_desc:   { tr: "Naci", en: "Naci", ja: "Naci" },
@@ -35,7 +37,7 @@ window.STRINGS = {
   project_10_desc:  { tr: "Türk Hava Yolları", en: "Turkish Airlines", ja: "ターキッシュ エアラインズ" },
   project_10_meta:  { tr: "Reklam Filmi", en: "Commercial", ja: "広告" },
   project_11_desc:  { tr: "Dettol", en: "Dettol", ja: "Dettol（デトール）" },
-  project_11_meta:  { tr: "Reklam Filmi (Şu an BOYKOT!)", en: "Commercial (brand currently under BOYCOTT!)", ja: "広告(今ボイコットです!)" },
+  project_11_meta:  { tr: "Reklam Filmi", en: "Commercial", ja: "広告" },
 
 
   articles_title:   { tr: "Yazılar", en: "Articles", ja: "記事" },
