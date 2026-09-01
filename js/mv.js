@@ -540,7 +540,7 @@ let prefersReducedMotion = window.matchMedia &&
           demoAllLinksOnce();
         }
       }, tourMs + pauseMs);
-    }, 2800);
+    }, 5600);
   }
 
   let pageHeaderEl = document.querySelector('#page > header');
