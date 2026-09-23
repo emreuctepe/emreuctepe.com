@@ -22,8 +22,8 @@ window.STRINGS = {
   work_more:        { tr: "Diğer Projeler", en: "More projects", ja: "その他のプロジェクト" },
   work_past:        { tr: "--------------Geçmiş----------", en: "--------------Past----------", ja: "----------過去----------" },
 
-  project_1_desc:   { tr: "Aylık Sosyal Dergi", en: "Monthly Social Magazine", ja: "毎月雑誌" },
-  project_1_meta:   { tr: "dergi.com", en: "dergi.com", ja: "dergi.com" },
+  project_1_desc:   { tr: "Aylık Dijital Dergi", en: "Monthly Digital Magazine", ja: "月刊デジタル雑誌" },
+  project_1_meta:   { tr: "doomreader.com", en: "doomreader.com", ja: "doomreader.com" },
   project_2_desc:   { tr: "Sadece Japonca Pratik", en: "Just Testing My Japanese", ja: "日本語を練習するだけ" },
   project_2_meta:   { tr: "YouTube Podcast", en: "YouTube Podcast", ja: "ポットキャスト" },
   project_3_desc:   { tr: "Rastgele Konu Seç", en: "Pick a Random Topic", ja: "ランドムトピックを選ぶ" },

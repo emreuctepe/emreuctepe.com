@@ -106,7 +106,9 @@ header {
 }
 
 #contact a#medium,
-#contact a#medium svg {
+#contact a#medium svg,
+#contact a#instagram,
+#contact a#instagram svg {
   width: 23.75px;
   height: 23.75px;
 }
@@ -115,6 +117,10 @@ header {
 #contact a#youtube svg {
   width: 33.75px;
   height: 23.75px;
+}
+
+#contact a[hidden] {
+  display: none !important;
 }
 
 #contact a svg path {
